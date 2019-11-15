@@ -1,0 +1,47 @@
+$color-logo: #655B51;
+
+.page-sub-header {
+  padding: 2rem 0;
+  background-color: $color-logo;
+  color: white;
+}
+
+.content-container {
+  padding-left: 3rem;
+  padding-right: 3rem;
+  margin-left: auto;
+  margin-right: auto;
+  max-width: 1300px;
+}
+
+.form-vertical-gap {
+  > * + * {
+    margin-top: 1rem;
+  }
+}
+
+.caps {
+  text-transform: uppercase;
+  letter-spacing: 0.16em;
+  font-weight: 500;
+  font-size: 0.9em;
+
+  &.big {
+    font-size: 1.1em;
+  }
+    
+  &.small {
+    font-size: 0.8em;
+    font-weight: 400;
+  }
+
+  &.smaller {
+    font-size: 0.65em;
+    font-weight: 400;
+  }
+}
+
+.subtitle {
+  opacity: 0.6;
+  font-size: 0.8rem;
+}

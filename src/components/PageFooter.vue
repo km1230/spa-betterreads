@@ -1,0 +1,33 @@
+<template>
+  <footer id="page-footer">
+    <div class="content-container d-flex align-center justify-space-between">
+      <img
+        id="page-footer-logo"
+        src="@/assets/logo.png"
+        alt="Base"
+      />
+      <div></div>
+    </div>
+  </footer>
+</template>
+
+<script lang="ts">
+import { Component, Prop, Vue } from 'vue-property-decorator';
+
+@Component({
+  components: {},
+})
+export default class extends Vue {}
+</script>
+
+<style lang="scss">
+#page-footer {
+  margin-top: 6rem;
+  padding: 3rem 0;
+  background-color: white;
+
+  #page-footer-logo {
+    width: 60px;
+  }
+}
+</style>
