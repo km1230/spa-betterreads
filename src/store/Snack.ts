@@ -7,10 +7,10 @@ import {
 } from 'vuex-module-decorators';
 
 @Module({
-  name: 'Snack',
+  name: 'SnackModule',
   namespaced: true,
 })
-export default class Snack extends VuexModule {
+export default class SnackModule extends VuexModule {
   snacks: string[] = [];
 
   get snacksVisible() {

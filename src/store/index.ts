@@ -1,8 +1,8 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
 import { getModule } from 'vuex-module-decorators';
-import Auth from '@/store/Auth';
-import Snack from '@/store/Snack';
+import AuthModule from '@/store/Auth';
+import SnackModule from '@/store/Snack';
 
 Vue.use(Vuex);
 
@@ -11,11 +11,15 @@ const store = new Vuex.Store({
   mutations: {},
   actions: {},
   modules: {
-    Auth,
-    Snack,
+    AuthModule,
+    SnackModule,
   },
 });
 
-export const authModule = getModule(Auth, store);
-export const snackModule = getModule(Snack, store);
+export const authModule = getModule(AuthModule, store);
+export const snackModule = getModule(SnackModule, store);
+
+// authModule.addLoginHook(myModule.myLoginHook);
+// authModule.addLogoutHook(myModule.myLogoutHook);
+
 export default store;

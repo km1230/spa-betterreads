@@ -1,17 +1,44 @@
-import { SpraypaintBase, Model, MiddlewareStack } from 'spraypaint';
+import {
+  Scope,
+  SpraypaintBase,
+  Model,
+  MiddlewareStack,
+  Attr,
+} from 'spraypaint';
+import Cookies from 'js-cookie';
+import { apiBase, apiNamespace, useCookies } from '@/config';
 
 @Model()
 export default class ApplicationRecord extends SpraypaintBase {
-  static baseUrl = process.env.VUE_APP_API_BASE;
+  static baseUrl = apiBase;
 
-  static apiNamespace = process.env.VUE_APP_API_NAMESPACE;
+  static apiNamespace = apiNamespace;
 
   static url(id?: string | number): string {
-    return `${super.url(id)}/`; // Add Django's trailing slash.
+    // add Django's trailing slash
+    return `${super.url(id)}/`;
   }
 
   static generateAuthHeader(token: string) {
     return `Token ${token}`;
+  }
+
+  static setJWT(jwt: string | undefined) {
+    if (useCookies) {
+      return;
+    }
+    if (jwt) {
+      Cookies.set('token', jwt);
+    } else {
+      Cookies.remove('token');
+    }
+  }
+
+  static getJWT(): string | undefined {
+    if (useCookies) {
+      return undefined;
+    }
+    return Cookies.get('token');
   }
 
   static listHeaders() {
@@ -25,18 +52,20 @@ export default class ApplicationRecord extends SpraypaintBase {
 
 const middlewareStack = new MiddlewareStack();
 
-// redirect on 401 unauthorised
-middlewareStack.afterFilters.push((response, json) => {
-  if (response.status === 401) {
-    localStorage.removeItem('jwt');
-    window.location.href = `/?next=${window.location.pathname}`;
-  }
-});
-
 // add jsonAPI errors to response
-middlewareStack.afterFilters.push((response, json) => {
-  // @ts-ignore
-  response.errors = json.errors || [];
+middlewareStack.afterFilters.push(
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  (response: ResponseExt, json: { [index: string]: any }) => {
+    response.errors = json.errors || [];
+  },
+);
+
+middlewareStack.beforeFilters.push((url, options) => {
+  const csrf = Cookies.get('csrftoken');
+  if (csrf) {
+    (options.headers as HeadersExt)['X-CSRFTOKEN'] = csrf;
+  }
+  options.credentials = useCookies ? 'include' : 'omit';
 });
 
 // Allow disassociate to clear FKs
