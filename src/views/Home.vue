@@ -5,7 +5,7 @@
     </div>
     <div v-else class="logged-in">
       <div class="text-center">
-        Logged in as <strong>{{ username }}</strong>
+        Welcome back <strong>{{ username.replace(/@.*/, '') }}</strong>
       </div>
     </div>
   </div>

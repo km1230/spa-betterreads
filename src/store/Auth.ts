@@ -1,5 +1,5 @@
-import { Module, VuexModule, Mutation, Action } from 'vuex-module-decorators';
-import { User, Session, ApplicationRecord } from '@/api';
+import { ApplicationRecord, Session, User } from '@/api';
+import { Action, Module, Mutation, VuexModule } from 'vuex-module-decorators';
 
 @Module({
   name: 'AuthModule',
@@ -20,6 +20,10 @@ export default class AuthModule extends VuexModule {
 
   get isLoggedIn(): boolean {
     return !!this.ready && !!this.user && !!this.session;
+  }
+
+  get isStaff(): boolean {
+    return this.user !== null ? this.user.isStaff : false;
   }
 
   get canAccess() {

@@ -1,16 +1,14 @@
-import Vue from 'vue';
-import VueRouter from 'vue-router';
-
-import Home from '@/views/Home.vue';
-import PasswordReset from '@/views/PasswordReset.vue';
-import PermissionDenied from '@/views/PermissionDenied.vue';
-import NotFound from '@/views/NotFound.vue';
-
-import Admin from '@/views/Admin.vue';
 import AdminListView from '@/components/admin/AdminListView.vue';
 import MyAccountView from '@/components/admin/MyAccount.vue';
-
 import { authModule } from '@/store';
+import Admin from '@/views/Admin.vue';
+import Home from '@/views/Home.vue';
+import NotFound from '@/views/NotFound.vue';
+import PasswordReset from '@/views/PasswordReset.vue';
+import PermissionDenied from '@/views/PermissionDenied.vue';
+import Registration from '@/views/Registration.vue';
+import Vue from 'vue';
+import VueRouter from 'vue-router';
 
 Vue.use(VueRouter);
 
@@ -21,6 +19,14 @@ const routes = [
     component: Home,
     meta: {
       title: 'Home',
+    },
+  },
+  {
+    path: '/registration',
+    name: 'registration',
+    component: Registration,
+    meta: {
+      title: 'Registration',
     },
   },
   {
@@ -61,6 +67,38 @@ const routes = [
         name: 'admin-users',
         component: AdminListView,
         meta: { title: 'Users' },
+      },
+      {
+        path: 'books',
+        name: 'admin-books',
+        component: AdminListView,
+        meta: {
+          title: 'Books',
+        },
+      },
+      {
+        path: 'categories',
+        name: 'admin-categories',
+        component: AdminListView,
+        meta: {
+          title: 'Categories',
+        },
+      },
+      {
+        path: 'shelves',
+        name: 'admin-shelves',
+        component: AdminListView,
+        meta: {
+          title: 'Shelves',
+        },
+      },
+      {
+        path: 'shelfbooks',
+        name: 'admin-shelfbooks',
+        component: AdminListView,
+        meta: {
+          title: 'Shelf-books',
+        },
       },
       // more here
       // { path: 'some-model', name: 'admin-some-model', component: AdminListView },

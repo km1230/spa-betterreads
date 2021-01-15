@@ -12,7 +12,14 @@
 <script lang="ts">
 import { Component, Prop, Vue, Watch } from 'vue-property-decorator';
 import AbstractTable from '@/components/admin/AbstractTable.vue';
-import { ApplicationRecord, User } from '@/api';
+import {
+  ApplicationRecord,
+  User,
+  Book,
+  Category,
+  Shelf,
+  Shelfbook,
+} from '@/api';
 
 @Component({
   components: {
@@ -28,6 +35,19 @@ export default class extends Vue {
         return User;
       // case 'admin-some-model':
       //   return SomeModel;
+
+      case 'admin-books':
+        return Book;
+
+      case 'admin-categories':
+        return Category;
+
+      case 'admin-shelves':
+        return Shelf;
+
+      case 'admin-shelfbooks':
+        return Shelfbook;
+
       default:
         return ApplicationRecord;
     }

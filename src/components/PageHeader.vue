@@ -42,11 +42,18 @@ export default class extends Vue {
       show: () => false,
     },
     {
+      title: 'Account',
+      to: {
+        name: 'account',
+      },
+      show: () => this.isLoggedIn,
+    },
+    {
       title: 'Admin',
       to: {
         name: 'admin',
       },
-      show: () => this.isLoggedIn,
+      show: () => this.isStaff,
     },
   ];
 
@@ -55,11 +62,15 @@ export default class extends Vue {
   searchFocused: boolean = false;
 
   get filteredMenu() {
-    return this.menu.filter(item => item.show());
+    return this.menu.filter((item) => item.show());
   }
 
   get isLoggedIn() {
     return authModule.isLoggedIn;
+  }
+
+  get isStaff() {
+    return authModule.isStaff;
   }
 
   get searchOpen() {

@@ -26,11 +26,13 @@
       Login
     </v-btn>
     <v-btn block large depressed @click="forgotPassword">Forgot Password</v-btn>
+    <v-btn block large depressed color="secondary" @click="registration">
+      Register
+    </v-btn>
   </v-form>
 </template>
 
 <script lang="ts">
-// @ts-ignore
 import v8n from 'v8n';
 import { Component, Prop, Vue } from 'vue-property-decorator';
 import { authModule, snackModule } from '@/store';
@@ -50,10 +52,7 @@ export default class extends Vue {
 
   emailRules = [
     (v: string) =>
-      v8n()
-        .string()
-        .not.empty()
-        .test(v) || 'Email address required',
+      v8n().string().not.empty().test(v) || 'Email address required',
 
     (v: string) =>
       v8n()
@@ -62,21 +61,21 @@ export default class extends Vue {
   ];
 
   passwordRules = [
-    (v: string) =>
-      v8n()
-        .string()
-        .not.empty()
-        .test(v) || 'Password required',
-    (v: string) =>
-      v8n()
-        .string()
-        .minLength(8)
-        .test(v) || 'Password must be at least 8 chars',
-    (v: string) =>
-      v8n()
-        .not.numeric()
-        .minLength(8)
-        .test(v) || 'Password must include non-numeric chars',
+    // (v: string) =>
+    //   v8n()
+    //     .string()
+    //     .not.empty()
+    //     .test(v) || 'Password required',
+    // (v: string) =>
+    //   v8n()
+    //     .string()
+    //     .minLength(8)
+    //     .test(v) || 'Password must be at least 8 chars',
+    // (v: string) =>
+    //   v8n()
+    //     .not.numeric()
+    //     .minLength(8)
+    //     .test(v) || 'Password must include non-numeric chars',
   ];
 
   async login() {
@@ -93,6 +92,10 @@ export default class extends Vue {
 
   forgotPassword() {
     this.$router.push({ name: 'forgot-password' });
+  }
+
+  registration() {
+    this.$router.push({ name: 'registration' });
   }
 }
 </script>

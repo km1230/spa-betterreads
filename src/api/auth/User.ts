@@ -1,4 +1,4 @@
-import { Model, Attr, BelongsTo } from 'spraypaint';
+import { Attr, Model } from 'spraypaint';
 import ApplicationRecord from '../ApplicationRecord';
 
 @Model()
@@ -22,6 +22,10 @@ export default class User extends ApplicationRecord {
         text: 'Email address',
         value: 'email',
       },
+      {
+        text: 'Staff',
+        value: 'isStaff',
+      },
     ];
   }
 
@@ -30,6 +34,7 @@ export default class User extends ApplicationRecord {
   }
 
   @Attr() email: string;
+  @Attr({ persist: false }) isStaff: boolean;
 
   // write only
   @Attr() password: string;

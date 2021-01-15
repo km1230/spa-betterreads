@@ -60,6 +60,10 @@ export default class extends Vue {
       icon: 'mdi-account',
       to: { name: 'admin-my-account' },
     },
+    { text: 'Categories', icon: '', to: { name: 'admin-categories' } },
+    { text: 'Books', icon: '', to: { name: 'admin-books' } },
+    { text: 'Shelves', icon: '', to: { name: 'admin-shelves' } },
+    { text: 'Shelfbooks', icon: '', to: { name: 'admin-shelfbooks' } },
   ];
 
   actions = [

@@ -28,9 +28,8 @@ export default class extends Vue {
   @Prop({ required: true }) readonly singleSelect: boolean;
 
   // eg () => User.includes(['someFields']).where({ project: 1 });
-  @Prop({ required: true }) readonly scopeFactory: () => Scope<
-    ApplicationRecord
-  >;
+  @Prop({ required: true })
+  readonly scopeFactory: () => Scope<ApplicationRecord>;
 
   selected: ApplicationRecord[] = [];
 
@@ -69,6 +68,7 @@ export default class extends Vue {
       this.items = result.data;
       this.total = result.meta.pagination.count;
     } catch (e) {
+      console.log('whoops', e);
       this.items = [];
     } finally {
       this.loading = false;
