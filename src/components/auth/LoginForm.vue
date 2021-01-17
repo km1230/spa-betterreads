@@ -25,7 +25,14 @@
     >
       Login
     </v-btn>
-    <v-btn block large depressed @click="forgotPassword">Forgot Password</v-btn>
+    <v-btn
+      block
+      large
+      depressed
+      class="amber white--text"
+      @click="forgotPassword"
+      >Forgot Password</v-btn
+    >
     <v-btn block large depressed class="pink white--text" @click="registration">
       Register
     </v-btn>

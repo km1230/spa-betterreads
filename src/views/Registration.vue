@@ -1,5 +1,5 @@
 <template>
-  <v-col cols="12" lg="6" offset-lg="3">
+  <v-col cols="12" lg="2" offset-lg="5">
     <v-form
       class="form-vertical-gap"
       v-model="valid"

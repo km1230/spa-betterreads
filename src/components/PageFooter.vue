@@ -1,12 +1,8 @@
 <template>
   <footer id="page-footer">
     <div class="content-container d-flex align-center justify-space-between">
-      <img
-        id="page-footer-logo"
-        src="@/assets/logo.png"
-        alt="Base"
-      />
-      <div></div>
+      <!-- <img id="page-footer-logo" src="@/assets/library.png" alt="Base" />
+      <div></div> -->
     </div>
   </footer>
 </template>
