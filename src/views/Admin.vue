@@ -20,7 +20,10 @@
       <v-list color="transparent">
         <v-subheader>{{ routeTitle }}</v-subheader>
       </v-list>
-      <router-view @list-select-change="listSelectChange"></router-view>
+      <router-view
+        ref="router"
+        @list-select-change="listSelectChange"
+      ></router-view>
     </div>
     <div class="admin-action-bar">
       <v-list color="transparent">
@@ -36,6 +39,7 @@
           <v-list-item-content>
             <v-list-item-title v-text="item.text"></v-list-item-title>
           </v-list-item-content>
+          <v-list-item-content v-text="item.content"></v-list-item-content>
         </v-list-item>
       </v-list>
     </div>
@@ -45,7 +49,8 @@
 <script lang="ts">
 import { Component, Prop, Vue } from 'vue-property-decorator';
 import AdminListView from '@/components/admin/AdminListView.vue';
-import { ApplicationRecord } from '@/api';
+import { ApplicationRecord, User } from '@/api';
+import { Mutation } from 'vuex-module-decorators';
 
 @Component({
   components: {},
@@ -66,13 +71,14 @@ export default class extends Vue {
     { text: 'Shelfbooks', icon: '', to: { name: 'admin-shelfbooks' } },
   ];
 
+  error: '';
+
   actions = [
     {
-      text: 'Do Something',
+      text: 'Do something',
       icon: 'mdi-plus',
-      onClick: () => {
-        // do something
-      },
+      onClick: () => {},
+      content: '',
     },
   ];
 
@@ -81,7 +87,35 @@ export default class extends Vue {
   }
 
   listSelectChange(selected: ApplicationRecord[]) {
-    // selection changed
+    if (selected.length != 0) {
+      switch (this.routeTitle) {
+        case 'USERS': {
+          this.actions = [
+            {
+              text: 'Is staff?',
+              icon: 'mdi-account-key',
+              onClick: async () => {
+                try {
+                  let { data } = await User.find(selected[0].id);
+                  if (data != null) {
+                    let user = data;
+                    user.isStaff = !user.isStaff;
+                    await user.save();
+                    (this.$refs.router as AdminListView).update();
+                  }
+                } catch (e) {
+                  this.error = e.response
+                    ? e.response.errors[0].detail
+                    : 'Unknown error';
+                }
+              },
+              content: '',
+            },
+          ];
+          break;
+        }
+      }
+    }
   }
 }
 </script>

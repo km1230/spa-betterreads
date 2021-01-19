@@ -18,12 +18,8 @@ export default class extends Vue {}
 
 <style lang="scss">
 #page-footer {
-  margin-top: 6rem;
-  padding: 3rem 0;
   background-color: white;
-
-  #page-footer-logo {
-    width: 60px;
-  }
+  position: absolute;
+  bottom: 0%;
 }
 </style>

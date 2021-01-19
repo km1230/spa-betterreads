@@ -1,6 +1,7 @@
 <template>
   <div class="list-view" :key="$route.name">
     <abstract-table
+      ref="table"
       :headers="headers"
       :scopeFactory="scopeFactory"
       :singleSelect="singleSelect"
@@ -10,7 +11,7 @@
 </template>
 
 <script lang="ts">
-import { Component, Prop, Vue, Watch } from 'vue-property-decorator';
+import { Component, Prop, Vue } from 'vue-property-decorator';
 import AbstractTable from '@/components/admin/AbstractTable.vue';
 import {
   ApplicationRecord,
@@ -59,6 +60,10 @@ export default class extends Vue {
 
   get scopeFactory() {
     return this.model.scopeFactory;
+  }
+
+  update() {
+    (this.$refs.table as AbstractTable).update();
   }
 
   listSelectChange(selected: ApplicationRecord[]) {

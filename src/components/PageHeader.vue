@@ -35,13 +35,6 @@ export default class extends Vue {
       show: () => true,
     },
     {
-      title: 'Explore',
-      to: {
-        name: 'home',
-      },
-      show: () => false,
-    },
-    {
       title: 'Account',
       to: {
         name: 'account',
@@ -54,6 +47,13 @@ export default class extends Vue {
         name: 'admin',
       },
       show: () => this.isStaff,
+    },
+    {
+      title: 'Login',
+      to: {
+        name: 'login',
+      },
+      show: () => !this.isLoggedIn,
     },
   ];
 

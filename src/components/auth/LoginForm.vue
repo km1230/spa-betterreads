@@ -85,6 +85,7 @@ export default class extends Vue {
     try {
       await authModule.login({ email: this.email, password: this.password });
       this.error = '';
+      this.$router.push({ name: 'home' });
     } catch (e) {
       this.error = e.response ? e.response.errors[0].detail : 'Unknown error';
     } finally {

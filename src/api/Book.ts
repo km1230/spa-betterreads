@@ -26,14 +26,19 @@ export default class Book extends ApplicationRecord {
                 text: 'Category',
                 value: 'category.name'
             },
+            {
+                text: 'Description',
+                value: 'description'
+            }
         ];
     }
 
-    static async newBook(title: string, author: string, category: Category) {
+    static async newBook(title: string, author: string, description: string, category: Category) {
         const book = new Book({
             title,
             author,
-            category
+            category,
+            description,
         });
         await book.save({ with: ['category.id'] });
         return book;
@@ -46,6 +51,8 @@ export default class Book extends ApplicationRecord {
     @Attr() title: string;
 
     @Attr() author: string;
+
+    @Attr() description: string;
 
     @HasOne() category: Category;
 }

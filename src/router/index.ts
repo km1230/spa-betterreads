@@ -2,7 +2,9 @@ import AdminListView from '@/components/admin/AdminListView.vue';
 import MyAccountView from '@/components/admin/MyAccount.vue';
 import { authModule } from '@/store';
 import Admin from '@/views/Admin.vue';
+import BookDetail from '@/views/BookDetail.vue';
 import Home from '@/views/Home.vue';
+import Login from '@/views/Login.vue';
 import NotFound from '@/views/NotFound.vue';
 import PasswordReset from '@/views/PasswordReset.vue';
 import PermissionDenied from '@/views/PermissionDenied.vue';
@@ -19,6 +21,22 @@ const routes = [
     component: Home,
     meta: {
       title: 'Home',
+    },
+  },
+  {
+    path: '/login',
+    name: 'login',
+    component: Login,
+    meta: {
+      title: 'Login',
+    },
+  },
+  {
+    path: '/book-detail/:id',
+    name: 'book-detail',
+    component: BookDetail,
+    meta: {
+      title: 'Book Detail',
     },
   },
   {

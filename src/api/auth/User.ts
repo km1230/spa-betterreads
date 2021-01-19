@@ -34,7 +34,7 @@ export default class User extends ApplicationRecord {
   }
 
   @Attr() email: string;
-  @Attr({ persist: false }) isStaff: boolean;
+  @Attr() isStaff: boolean;
 
   // write only
   @Attr() password: string;
