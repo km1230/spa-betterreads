@@ -29,9 +29,14 @@ export default class Shelf extends ApplicationRecord {
         ];
     }
 
+    static async newShelf() {
+
+    }
+
     static scopeFactory() {
         return Shelf.includes(["books", "user"]);
     }
+
 
     @Attr() name: string;
     @Attr() public: Boolean;

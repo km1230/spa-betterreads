@@ -13,13 +13,11 @@ const store = new Vuex.Store({
   modules: {
     AuthModule,
     SnackModule,
-    // BookModule,
   },
 });
 
 export const authModule = getModule(AuthModule, store);
 export const snackModule = getModule(SnackModule, store);
-// export const bookModule = getModule(BookModule, store);
 
 // authModule.addLoginHook(myModule.myLoginHook);
 // authModule.addLogoutHook(myModule.myLogoutHook);

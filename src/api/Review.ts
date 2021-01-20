@@ -33,14 +33,20 @@ export default class Review extends ApplicationRecord {
         ];
     }
 
-    static async newReview(content: string, rate: string, book: Book) {
+    static async newReview(user: User, content: string, rate: string, book: Book) {
         const review = new Review({
+            user,
             content,
             rate,
             book,
         });
         await review.save({ with: ['book.id'] });
         return review;
+    }
+
+    static async delReview(id: string) {
+        let { data } = await Review.find(id);
+        await data.destroy()
     }
 
     static scopeFactory() {

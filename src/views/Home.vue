@@ -1,5 +1,6 @@
 <template>
   <div class="home blue-grey lighten-5">
+    <!-- Show carousel to annonymus users -->
     <div class="red white--text">{{ this.error }}</div>
     <div class="carousel" v-if="!isLoggedIn">
       <v-carousel continuous :cycle="true" :show-arrows="false" :max="5">
@@ -12,7 +13,7 @@
       </v-carousel>
     </div>
 
-    <!-- Show their/public shelves when user logged in -->
+    <!-- Show their/public shelves when users logged in -->
     <div v-else class="trending">
       <div class="text-center greeting">
         Welcome back <strong>{{ username.replace(/@.*/, '') }}!</strong>
@@ -112,6 +113,8 @@ export default class extends Vue {
 <style lang="scss">
 .home {
   height: 100%;
+  padding-left: 20px;
+  padding-right: 20px;
 }
 .greeting {
   padding: 20px;

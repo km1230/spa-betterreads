@@ -1,90 +1,30 @@
 <template>
   <div>
+    <!-- page main content -->
     <div class="bookTitle teal text-center white--text">
       <v-icon dense large>mdi-book-open-page-variant</v-icon>&nbsp;{{
-        this.bookTitle
+        this.book.title
       }}
     </div>
     <v-container>
       <v-row>
-        <v-col lg="7" sm="12">
-          <v-row>
-            <v-sheet
-              color="blue-grey darken-1"
-              class="white--text shape"
-              elevation="10"
-              shaped
-            >
-              <v-icon class="left white--text">mdi-account-box-outline</v-icon
-              >{{ this.bookAuthor }}
-            </v-sheet>
-            <v-sheet
-              color="purple light-4 white--text"
-              class="shape"
-              elevation="10"
-              shaped
-            >
-              <v-icon class="left white--text">mdi-image-album</v-icon
-              >{{ this.bookCategory }}
-            </v-sheet>
-          </v-row>
-          <v-img
-            class="bookImage"
-            contain
-            :light="true"
-            src="https://picsum.photos/200/300"
-          />
-          <div class="bookDescription blue-grey lighten-5">
-            {{ this.bookDescription }}
-          </div>
-        </v-col>
+        <!-- BookDescription component -->
+        <book-description :book="book" :category="category" />
+
+        <!-- Other reviews -->
         <v-col lg="5" sm="12">
-          <v-row class="rating">
-            <v-col sm="6">
-              <v-rating
-                hover
-                :length="5"
-                :size="50"
-                :value="3"
-                class="rateBar"
-                ref="rateBar"
-                :readonly="isLoggedIn ? false : true"
-              ></v-rating>
-            </v-col>
-            <v-col sm="6" v-if="isLoggedIn">
-              <v-btn class="">
-                Add to Shelf<v-icon color="dark right">mdi-cards-heart</v-icon>
-              </v-btn>
-            </v-col>
-          </v-row>
-          <div class="reviews">
-            <v-icon>mdi-comment-text-multiple</v-icon> Reviews
-            <div
-              class="reviewsContent amber accent-4 white--text"
-              v-for="review in bookReviews.slice(0, 3)"
-              :key="review.id"
-            >
-              {{ review.content || '' }}
-            </div>
-          </div>
-          <v-divider />
-          <form class="leaveReview" @submi.prevent="" v-if="isLoggedIn">
-            <v-col sm="12">
-              <v-icon class="reviewIcon">mdi-account-voice</v-icon>
-            </v-col>
-            <v-col sm="12">
-              <v-text-field
-                outlined
-                clearable
-                class="reviewField"
-                ref="reviewField"
-                placeholder="leave reivew..."
-              />
-            </v-col>
-            <v-btn class="blue white--text" block type="submit"
-              >Post Review</v-btn
-            >
-          </form>
+          <other-review
+            :bookReviews="bookReviews"
+            :currentUser="currentUser"
+            @deleteReview="deleteReviewContent"
+          />
+
+          <!-- User review -->
+          <user-review
+            :bookReviews="bookReviews"
+            :currentUser="currentUser"
+            @reviewUpdated="getReviews"
+          />
         </v-col>
       </v-row>
     </v-container>
@@ -93,37 +33,66 @@
 
 <script lang='ts'>
 import { Component, Prop, Vue } from 'vue-property-decorator';
-import { Book, Category, Review } from '@/api';
+import { User, Book, Category, Review, Shelf, Shelfbook } from '@/api';
 import { authModule } from '@/store';
+import BookDescription from '@/components/BookDescription.vue';
+import OtherReview from '@/components/OtherReview.vue';
+import UserReview from '@/components/UserReview.vue';
 
-@Component({})
+@Component({
+  components: {
+    BookDescription,
+    OtherReview,
+    UserReview,
+  },
+})
 export default class extends Vue {
-  bookTitle: string = '';
-  bookAuthor: string = '';
-  bookCategory: string = '';
-  bookDescription: string = '';
+  book: Book | null = null;
+  category: string = '';
   bookReviews: Review[] = [];
   error: '';
+  userShelves: Shelf[] = [];
 
   async bookDetail() {
     try {
       let { data } = await Book.find(this.$route.params.id);
-      this.bookTitle = data.title;
-      this.bookAuthor = data.author;
-      this.bookDescription = data.description;
+      this.book = data;
       let cat = await Category.find(data.category.id);
-      this.bookCategory = cat.data.name;
+      this.category = cat.data.name;
     } catch (e) {
       this.error = e.response ? e.response.errors[0].detail : 'Unknown error';
     }
   }
 
-  async review() {
+  async getReviews() {
     try {
       let { data } = await Review.all();
-      this.bookReviews = data.filter((r) => {
-        if (r.book.id === this.$route.params.id) return r;
-      });
+      this.bookReviews = data.filter(
+        (r) => r.book.id === this.$route.params.id,
+      );
+    } catch (e) {
+      this.error = e.response ? e.response.errors[0].detail : 'Unknown error';
+    }
+  }
+
+  async deleteReviewContent() {
+    try {
+      if (this.userReview !== null) {
+        let { data } = await Review.find(this.userReview.id);
+        data.content = '';
+        await data.save();
+      }
+      this.getReviews();
+    } catch (e) {
+      this.error = e.response ? e.response.errors[0].detail : 'Unknown error';
+    }
+  }
+
+  async getUserShelf() {
+    try {
+      let { data } = await Shelf.all();
+      let shelves = data.filter((s) => s.user.id === this.currentUser?.id);
+      this.userShelves = shelves.length > 0 ? shelves : [];
     } catch (e) {
       this.error = e.response ? e.response.errors[0].detail : 'Unknown error';
     }
@@ -133,9 +102,13 @@ export default class extends Vue {
     return authModule.isLoggedIn;
   }
 
+  get currentUser() {
+    return authModule.user;
+  }
+
   mounted() {
     this.bookDetail();
-    this.review();
+    this.getReviews();
   }
 }
 </script>
@@ -163,7 +136,6 @@ export default class extends Vue {
   padding: 20px;
 }
 .rating {
-  font-size: 1.5rem;
   align-items: center;
 }
 .rateBar {

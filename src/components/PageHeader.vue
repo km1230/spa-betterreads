@@ -88,8 +88,9 @@ export default class extends Vue {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 2rem 3rem;
+  padding: 20px;
   background-color: white;
+  max-height: 15vh;
 
   #page-header-logo {
     width: 120px;

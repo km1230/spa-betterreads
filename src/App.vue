@@ -74,6 +74,9 @@ export default class extends Vue {
 </script>
 
 <style lang="scss">
+a {
+  text-decoration: none;
+}
 .v-app-override {
   display: block;
 }
