@@ -3,7 +3,7 @@
     <!-- page main content -->
     <div class="bookTitle teal text-center white--text">
       <v-icon dense large>mdi-book-open-page-variant</v-icon>&nbsp;{{
-        this.book.title
+        (this.book) ? this.book.title : ''
       }}
     </div>
     <v-container>
@@ -14,14 +14,15 @@
         <!-- Other reviews -->
         <v-col lg="5" sm="12">
           <other-review
-            :bookReviews="bookReviews"
+            :bookReviews="allBookReviews"
             :currentUser="currentUser"
+            :userShelves="userAllShelves"
             @deleteReview="deleteReviewContent"
           />
 
           <!-- User review -->
           <user-review
-            :bookReviews="bookReviews"
+            :bookReviews="allBookReviews"
             :currentUser="currentUser"
             @reviewUpdated="getReviews"
           />
@@ -98,6 +99,24 @@ export default class extends Vue {
     }
   }
 
+  async addToShelf() {
+    try {
+      this.userAllShelves.filter(s => {
+        // Kavie change this pls
+      });
+    } catch(e) {
+      this.error = e.response ? e.response.errors[0].detail : 'Unknown error';
+    }
+  }
+
+  get allBookReviews() {
+    return this.bookReviews
+  }
+
+  get userAllShelves() {
+    return this.userShelves
+  }
+
   get isLoggedIn() {
     return authModule.isLoggedIn;
   }
@@ -137,6 +156,7 @@ export default class extends Vue {
 }
 .rating {
   align-items: center;
+  margin-bottom: 10px;
 }
 .rateBar {
   max-width: 50% !important;

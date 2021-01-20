@@ -9,7 +9,7 @@
         shaped
       >
         <v-icon class="left white--text">mdi-account-box-outline</v-icon
-        >{{ book.author }}
+        >{{ (book) ? book.author : '' }}
       </v-sheet>
       <v-sheet
         color="purple light-4 white--text"
@@ -27,7 +27,7 @@
       src="https://picsum.photos/200/300"
     />
     <div class="bookDescription blue-grey lighten-5">
-      {{ book.description }}
+      {{ (book) ? book.description : ''  }}
     </div>
   </v-col>
 </template>
