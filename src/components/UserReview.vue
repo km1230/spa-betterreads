@@ -81,6 +81,8 @@ export default class extends Vue {
       this.reviewUpdated();
     } catch (e) {
       this.error = e.response ? e.response.errors[0].detail : 'Unknown error';
+    } finally {
+      this.$refs.reviewField.value = '';
     }
   }
 

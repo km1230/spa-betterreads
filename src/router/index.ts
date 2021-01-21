@@ -1,7 +1,9 @@
 import AdminListView from '@/components/admin/AdminListView.vue';
 import MyAccountView from '@/components/admin/MyAccount.vue';
 import { authModule } from '@/store';
+import AddBook from '@/views/AddBook.vue';
 import Admin from '@/views/Admin.vue';
+import AllBooks from '@/views/AllBooks.vue';
 import BookDetail from '@/views/BookDetail.vue';
 import Home from '@/views/Home.vue';
 import Login from '@/views/Login.vue';
@@ -9,6 +11,7 @@ import NotFound from '@/views/NotFound.vue';
 import PasswordReset from '@/views/PasswordReset.vue';
 import PermissionDenied from '@/views/PermissionDenied.vue';
 import Registration from '@/views/Registration.vue';
+import Shelfbook from '@/views/Shelfbook.vue';
 import Vue from 'vue';
 import VueRouter from 'vue-router';
 
@@ -24,11 +27,19 @@ const routes = [
     },
   },
   {
-    path: '/login',
-    name: 'login',
-    component: Login,
+    path: '/all-books',
+    name: 'all-books',
+    component: AllBooks,
     meta: {
-      title: 'Login',
+      title: 'All Books'
+    },
+  },
+  {
+    path: '/add-book',
+    name: 'add-book',
+    component: AddBook,
+    meta: {
+      title: 'Add New Book',
     },
   },
   {
@@ -37,6 +48,22 @@ const routes = [
     component: BookDetail,
     meta: {
       title: 'Book Detail',
+    },
+  },
+  {
+    path: '/user-shelfbooks',
+    name: 'user-shelfbooks',
+    component: Shelfbook,
+    meta: {
+      title: 'My Shelf-Books',
+    },
+  },
+  {
+    path: '/login',
+    name: 'login',
+    component: Login,
+    meta: {
+      title: 'Login',
     },
   },
   {

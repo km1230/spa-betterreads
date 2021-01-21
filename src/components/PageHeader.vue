@@ -35,11 +35,25 @@ export default class extends Vue {
       show: () => true,
     },
     {
-      title: 'Account',
+      title: 'All Books',
       to: {
-        name: 'account',
+        name: 'all-books',
+      },
+      show: () => true,
+    },
+    {
+      title: 'My Shelf-Books',
+      to: {
+        name: 'user-shelfbooks',
       },
       show: () => this.isLoggedIn,
+    },
+    {
+      title: 'Add Book',
+      to: {
+        name: 'add-book',
+      },
+      show: () => this.isStaff,
     },
     {
       title: 'Admin',

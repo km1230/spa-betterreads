@@ -3,7 +3,7 @@
     <!-- page main content -->
     <div class="bookTitle teal text-center white--text">
       <v-icon dense large>mdi-book-open-page-variant</v-icon>&nbsp;{{
-        (this.book) ? this.book.title : ''
+        this.book ? this.book.title : ''
       }}
     </div>
     <v-container>
@@ -16,10 +16,11 @@
           <other-review
             :bookReviews="allBookReviews"
             :currentUser="currentUser"
-            :userShelves="userAllShelves"
+            :userHasBook="isUserHasBook"
             @deleteReview="deleteReviewContent"
           />
 
+          <v-divider />
           <!-- User review -->
           <user-review
             :bookReviews="allBookReviews"
@@ -39,20 +40,23 @@ import { authModule } from '@/store';
 import BookDescription from '@/components/BookDescription.vue';
 import OtherReview from '@/components/OtherReview.vue';
 import UserReview from '@/components/UserReview.vue';
+import AddToShelf from '@/components/AddToShelf.vue';
 
 @Component({
   components: {
     BookDescription,
     OtherReview,
     UserReview,
+    AddToShelf,
   },
 })
 export default class extends Vue {
   book: Book | null = null;
   category: string = '';
   bookReviews: Review[] = [];
-  error: '';
   userShelves: Shelf[] = [];
+  userHasBook: boolean = false;
+  error = '';
 
   async bookDetail() {
     try {
@@ -67,10 +71,8 @@ export default class extends Vue {
 
   async getReviews() {
     try {
-      let { data } = await Review.all();
-      this.bookReviews = data.filter(
-        (r) => r.book.id === this.$route.params.id,
-      );
+      let { data } = await Review.where({ book: this.$route.params.id }).all();
+      this.bookReviews = data;
     } catch (e) {
       this.error = e.response ? e.response.errors[0].detail : 'Unknown error';
     }
@@ -78,43 +80,40 @@ export default class extends Vue {
 
   async deleteReviewContent() {
     try {
-      if (this.userReview !== null) {
-        let { data } = await Review.find(this.userReview.id);
+      let { data } = await Review.where({ user: this.currentUser.id }).first();
+      if (data) {
         data.content = '';
         await data.save();
       }
+    } catch (e) {
+      this.error = e.response ? e.response.errors[0].detail : 'Unknown error';
+    } finally {
       this.getReviews();
+    }
+  }
+
+  async findUserShelfbook() {
+    try {
+      let { data } = await Shelfbook.where({
+        book: this.$route.params.id,
+      })
+        .includes('shelf')
+        .all();
+      let userShelfbook = data.filter(
+        (sb) => sb.shelf.user.id === this.currentUser?.id,
+      );
+      this.userHasBook = userShelfbook.length > 0 ? true : false;
     } catch (e) {
       this.error = e.response ? e.response.errors[0].detail : 'Unknown error';
     }
   }
 
-  async getUserShelf() {
-    try {
-      let { data } = await Shelf.all();
-      let shelves = data.filter((s) => s.user.id === this.currentUser?.id);
-      this.userShelves = shelves.length > 0 ? shelves : [];
-    } catch (e) {
-      this.error = e.response ? e.response.errors[0].detail : 'Unknown error';
-    }
-  }
-
-  async addToShelf() {
-    try {
-      this.userAllShelves.filter(s => {
-        // Kavie change this pls
-      });
-    } catch(e) {
-      this.error = e.response ? e.response.errors[0].detail : 'Unknown error';
-    }
+  get isUserHasBook() {
+    return this.userHasBook;
   }
 
   get allBookReviews() {
-    return this.bookReviews
-  }
-
-  get userAllShelves() {
-    return this.userShelves
+    return this.bookReviews;
   }
 
   get isLoggedIn() {
@@ -128,6 +127,7 @@ export default class extends Vue {
   mounted() {
     this.bookDetail();
     this.getReviews();
+    this.findUserShelfbook();
   }
 }
 </script>

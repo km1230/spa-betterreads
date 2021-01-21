@@ -18,7 +18,7 @@
       </v-col>
       <!-- add to shelf -->
       <v-col sm="2">
-        <v-btn depressed outlined color="grey" @click="addToShelf">
+        <v-btn depressed outlined :color="userHasBook ? 'pink' : 'grey'">
           <v-icon>mdi-cards-heart</v-icon>
         </v-btn>
       </v-col>
@@ -44,27 +44,23 @@
         </div>
       </div>
     </div>
-    <v-divider />
   </div>
 </template>
 
 <script lang="ts">
 import { Component, Prop, Vue } from 'vue-property-decorator';
-import { User, Review, Shelf } from '@/api';
+import { User, Review } from '@/api';
 import { authModule } from '@/store';
 
 @Component({})
 export default class extends Vue {
   @Prop() readonly bookReviews: Review[];
   @Prop() readonly currentUser: User;
-  @Prop() readonly userShelves: Shelf[];
+  @Prop() readonly userHasBook: boolean;
+  error: string = '';
 
   deleteReview() {
     this.$emit('deleteReview');
-  }
-
-  addToShelf() {
-    // Kavie change this pls
   }
 
   get avgRating() {
@@ -73,10 +69,6 @@ export default class extends Vue {
       rate += Number(r.rate);
     });
     return Math.floor(rate / this.bookReviews.length);
-  }
-
-  get userShelf(){
-    // Kavie change this pls
   }
 }
 </script>

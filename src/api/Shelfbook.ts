@@ -29,6 +29,20 @@ export default class Shelfbook extends ApplicationRecord {
         ];
     }
 
+    static async newShelfbook(shelf: Shelf, book: Book) {
+        const shelfbook = new Shelfbook({
+            shelf,
+            book,
+        });
+        await shelfbook.save();
+        return shelfbook;
+    }
+
+    static async delShelfBook(id: string) {
+        let { data } = await Shelfbook.find(id);
+        await data.destroy()
+    }
+
     static scopeFactory() {
         return Shelfbook.includes(["shelf", "books"]);
     }

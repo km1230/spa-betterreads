@@ -29,10 +29,6 @@ export default class Shelf extends ApplicationRecord {
         ];
     }
 
-    static async newShelf() {
-
-    }
-
     static scopeFactory() {
         return Shelf.includes(["books", "user"]);
     }
@@ -40,6 +36,6 @@ export default class Shelf extends ApplicationRecord {
 
     @Attr() name: string;
     @Attr() public: Boolean;
-    @HasMany() books: Book;
+    @HasMany() books: Book[];
     @HasOne() user: User;
 }

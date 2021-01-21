@@ -32,6 +32,7 @@
     "typescript": "^3.9.7",
     "vue-cli-plugin-vuetify": "^2.0.9",
     "vue-template-compiler": "^2.6.12",
+    "vue2-dropzone": "^3.6.0",
     "vuetify-loader": "^1.6.0"
   }
 }

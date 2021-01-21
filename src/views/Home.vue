@@ -4,8 +4,9 @@
     <div class="red white--text">{{ this.error }}</div>
     <div class="carousel" v-if="!isLoggedIn">
       <v-carousel continuous :cycle="true" :show-arrows="false" :max="5">
+        <!-- Max 3 books are shown -->
         <v-carousel-item
-          v-for="book in books"
+          v-for="book in books.slice(0, 3)"
           reverse-transition="fade-transition"
           transition="fade-transition"
           :key="book.id"
