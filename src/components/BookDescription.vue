@@ -36,7 +36,7 @@
 import { Component, Prop, Vue } from 'vue-property-decorator';
 import { Book } from '@/api';
 
-@Component({})
+@Component({name: 'BookDescription'})
 export default class extends Vue {
   @Prop() book: Book;
   @Prop() category: string = '';

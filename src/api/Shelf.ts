@@ -29,6 +29,12 @@ export default class Shelf extends ApplicationRecord {
         ];
     }
 
+    static async newShelf(name: string, user: User) {
+        let shelf = new Shelf({name, user})
+        await shelf.save();
+        return shelf;
+    }
+
     static scopeFactory() {
         return Shelf.includes(["books", "user"]);
     }

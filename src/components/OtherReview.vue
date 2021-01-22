@@ -18,7 +18,7 @@
       </v-col>
       <!-- add to shelf -->
       <v-col sm="2">
-        <v-btn depressed outlined :color="userHasBook ? 'pink' : 'grey'">
+        <v-btn depressed outlined :color="userHasBook ? 'pink' : 'grey'" @click="hideReview">
           <v-icon>mdi-cards-heart</v-icon>
         </v-btn>
       </v-col>
@@ -52,7 +52,7 @@ import { Component, Prop, Vue } from 'vue-property-decorator';
 import { User, Review } from '@/api';
 import { authModule } from '@/store';
 
-@Component({})
+@Component({name: 'OtherReview'})
 export default class extends Vue {
   @Prop() readonly bookReviews: Review[];
   @Prop() readonly currentUser: User;
@@ -61,6 +61,10 @@ export default class extends Vue {
 
   deleteReview() {
     this.$emit('deleteReview');
+  }
+
+  hideReview() {
+    this.$emit('toggleReview')
   }
 
   get avgRating() {

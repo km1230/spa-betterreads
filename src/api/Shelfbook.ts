@@ -1,6 +1,7 @@
-import { Book, Shelf } from '@/api';
-import { Attr, HasOne, Model } from 'spraypaint';
+import { Book, Shelf, User } from '@/api';
+import { Attr, BelongsTo, HasOne, Model } from 'spraypaint';
 import ApplicationRecord from './ApplicationRecord';
+import Shelf from './Shelf';
 
 @Model()
 export default class Shelfbook extends ApplicationRecord {
@@ -29,12 +30,12 @@ export default class Shelfbook extends ApplicationRecord {
         ];
     }
 
-    static async newShelfbook(shelf: Shelf, book: Book) {
+    static async newShelfbook(shelf: Shelf, book: Book, userId: string) {
         const shelfbook = new Shelfbook({
             shelf,
             book,
         });
-        await shelfbook.save();
+        if(shelf.user.id === userId) await shelfbook.save({with: ["shelf.id", "book.id"]});
         return shelfbook;
     }
 
@@ -44,10 +45,9 @@ export default class Shelfbook extends ApplicationRecord {
     }
 
     static scopeFactory() {
-        return Shelfbook.includes(["shelf", "books"]);
+        return Shelfbook.includes(["shelf", "book"]);
     }
 
-    @Attr() name: string;
     @Attr() status: string;
     @HasOne() shelf: Shelf;
     @HasOne() book: Book;

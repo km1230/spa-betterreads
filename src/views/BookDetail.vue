@@ -14,13 +14,26 @@
         <!-- Other reviews -->
         <v-col lg="5" sm="12">
           <other-review
+            v-if="showReview"
             :bookReviews="allBookReviews"
             :currentUser="currentUser"
             :userHasBook="isUserHasBook"
             @deleteReview="deleteReviewContent"
+            @toggleReview="toggleReview"
+          />
+
+          <!-- Add Book To Shelf -->
+          <add-to-shelf 
+            v-else 
+            :currentUser="currentUser"
+            :userHasBook="isUserHasBook"
+            @cancel="toggleReview" 
+            @createShelf="addToNewShelf($event)" 
+            @shelfChosen="addToChosenShelf($event)"
           />
 
           <v-divider />
+
           <!-- User review -->
           <user-review
             :bookReviews="allBookReviews"
@@ -43,6 +56,7 @@ import UserReview from '@/components/UserReview.vue';
 import AddToShelf from '@/components/AddToShelf.vue';
 
 @Component({
+  name: 'BookDetail',
   components: {
     BookDescription,
     OtherReview,
@@ -54,8 +68,8 @@ export default class extends Vue {
   book: Book | null = null;
   category: string = '';
   bookReviews: Review[] = [];
-  userShelves: Shelf[] = [];
   userHasBook: boolean = false;
+  showReview: boolean = true;
   error = '';
 
   async bookDetail() {
@@ -80,10 +94,12 @@ export default class extends Vue {
 
   async deleteReviewContent() {
     try {
-      let { data } = await Review.where({ user: this.currentUser.id }).first();
-      if (data) {
-        data.content = '';
-        await data.save();
+      if(this.currentUser) {
+        let { data } = await Review.where({ user: this.currentUser.id }).first();
+        if (data) {
+          data.content = '';
+          await data.save();
+        }
       }
     } catch (e) {
       this.error = e.response ? e.response.errors[0].detail : 'Unknown error';
@@ -105,6 +121,41 @@ export default class extends Vue {
       this.userHasBook = userShelfbook.length > 0 ? true : false;
     } catch (e) {
       this.error = e.response ? e.response.errors[0].detail : 'Unknown error';
+    }
+  }
+
+  toggleReview() {
+    this.showReview = !this.showReview;
+  }
+
+  async addToNewShelf(shelfName: string) {
+    try {      
+      if(this.currentUser)
+      {        
+        let shelf = await Shelf.newShelf(shelfName, this.currentUser);
+        if (shelf) await this.addBookToShelf(shelf)
+      }
+    } catch (e) {
+      this.error = e.response ? e.response.errors[0].detail : 'Unknown error';
+    }
+  }
+
+  async addToChosenShelf(shelves: Shelf[]) {
+    for await (let shelf of shelves) {
+      this.addBookToShelf(shelf)
+    }
+  }
+
+  async addBookToShelf(shelf: Shelf) {
+    try {
+      if(shelf && this.book) {
+        let result = await Shelfbook.newShelfbook(shelf, this.book, this.currentUser?.id);      
+      }      
+    } catch (e) {
+      this.error = e.response ? e.response.errors[0].detail : 'Unknown error';
+    } finally {
+      this.findUserShelfbook()
+      this.toggleReview()
     }
   }
 

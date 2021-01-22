@@ -37,7 +37,7 @@ import { Component, Prop, Vue } from 'vue-property-decorator';
 import { User, Book, Review } from '@/api';
 import { authModule } from '@/store';
 
-@Component({})
+@Component({name: 'UserReview'})
 export default class extends Vue {
   @Prop() readonly bookReviews: Review[];
   @Prop() readonly currentUser: User;

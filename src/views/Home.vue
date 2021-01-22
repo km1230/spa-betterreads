@@ -52,6 +52,7 @@ import { authModule } from '../store';
 import { Book, Shelf } from '@/api';
 
 @Component({
+  name: 'Home',
   components: {
     LoginForm,
   },
