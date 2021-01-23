@@ -1,6 +1,6 @@
 <template>
   <div class="blue-grey lighten-4">
-    <p>{{ error }}</p>
+    <v-alert>{{ error }}</v-alert>
     <v-row class="mainRow">
       <v-col lg="4" sm="12" v-for="book in books" :key="book.id" ref="cardCol">
         <v-card class="card">
@@ -49,6 +49,12 @@ export default class extends Vue {
 </script>
 
 <style lang="scss">
+.error {
+  background-color: red;
+  color: white;
+  font-size: 1rem;
+  padding: 10px;
+}
 .mainRow {
   padding: 20px;
 }

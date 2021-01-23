@@ -1,6 +1,6 @@
 <template>
   <div class="blue-grey lighten-4 main">
-    <p>{{ error }}</p>
+    <v-alert>{{ error }}</v-alert>
     <v-col sm="12" lg="4" offset-lg="4">
       <h2>Add New Book</h2>
       <form>
@@ -97,6 +97,12 @@ export default class extends Vue {
 </script>
 
 <style lang="scss">
+.error {
+  background-color: red;
+  color: white;
+  font-size: 1rem;
+  padding: 10px;
+}
 .main {
   padding: 20px;
 }

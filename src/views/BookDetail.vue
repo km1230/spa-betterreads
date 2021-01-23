@@ -1,5 +1,6 @@
 <template>
   <div>
+    <v-alert>{{ error }}</v-alert>
     <!-- page main content -->
     <div class="bookTitle teal text-center white--text">
       <v-icon dense large>mdi-book-open-page-variant</v-icon>&nbsp;{{
@@ -30,6 +31,7 @@
             @cancel="toggleReview" 
             @createShelf="addToNewShelf($event)" 
             @shelfChosen="addToChosenShelf($event)"
+            @removeShelfbook="delShelfBook($event)"
           />
 
           <v-divider />
@@ -159,6 +161,17 @@ export default class extends Vue {
     }
   }
 
+  async delShelfBook(sb: Shelfbook) {    
+    try {
+      if(sb) await Shelfbook.delShelfBook(sb.id);
+    } catch (e) {
+      this.error = e.response ? e.response.errors[0].detail : 'Unknown error';
+    } finally {
+      this.findUserShelfbook()
+      this.toggleReview()
+    }
+  }
+
   get isUserHasBook() {
     return this.userHasBook;
   }
@@ -184,6 +197,12 @@ export default class extends Vue {
 </script>
 
 <style lang="scss">
+.error {
+  background-color: red;
+  color: white;
+  font-size: 1rem;
+  padding: 10px;
+}
 .bookTitle {
   max-width: 100%;
   padding-top: 10px;

@@ -5,7 +5,7 @@
       <v-card-title v-if="!userHasBook">Add to Book Shelf</v-card-title>
       <v-card-title v-else>Remove from shelf?</v-card-title>
       <v-card-subtitle>
-        <h3>Which shelf? (Uncheck to remove)</h3>
+        <h3>Which shelf? <span v-if="userHasBook">(Uncheck to remove)</span></h3>
       </v-card-subtitle>
       <v-card-text v-if="retrieveShelves">
         <v-checkbox
@@ -62,16 +62,12 @@ export default class extends Vue {
   error: string = '';  
 
   async chooseShelf() {    
-    for await (let id of this.selected) {
-      this.getChosenShelves(id);
-    }
-    this.$emit('shelfChosen', this.chosenShelves);
-  }
-
-  async getChosenShelves(id: string) {
     try {
-      let {data} = await Shelf.find(id);
-      this.chosenShelves.push(data)
+      for await (let id of this.selected) {
+        let {data} = await Shelf.find(id);
+        this.chosenShelves.push(data)
+      }
+      if(this.chosenShelves.length > 0) this.$emit('shelfChosen', this.chosenShelves);
     } catch (e) {
       this.error = e.response ? e.response.errors[0].detail : 'Unknown error';
     }
@@ -86,11 +82,9 @@ export default class extends Vue {
     this.$emit('cancel');
   }
 
-  removeShelfBook() {
-    // TO-DO
-    // compare this.shelvebooks - this.selected
-    // get differences from this.shelvebooks
-    // emit event and delete those shelvebooks instances
+  removeShelfBook() {   
+    let diff = this.shelfbooks.filter(sb => !this.selected.includes(sb.shelf.id));
+    if(diff.length > 0) diff.forEach(d => this.$emit('removeShelfbook', d))
   }
 
   async getUserShelves() {
