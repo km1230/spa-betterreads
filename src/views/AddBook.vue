@@ -1,6 +1,6 @@
 <template>
   <div class="blue-grey lighten-4 main">
-    <v-alert>{{ error }}</v-alert>
+    <v-alert v-if="error" type="error">{{ error }}</v-alert>
     <v-col sm="12" lg="4" offset-lg="4">
       <h2>Add New Book</h2>
       <form>

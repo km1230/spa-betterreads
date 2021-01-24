@@ -1,6 +1,6 @@
 <template>
   <div>
-    <v-alert>{{ error }}</v-alert>
+    <v-alert v-if="error" type="error">{{ error }}</v-alert>
     <!-- page main content -->
     <div class="bookTitle teal text-center white--text">
       <v-icon dense large>mdi-book-open-page-variant</v-icon>&nbsp;{{

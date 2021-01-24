@@ -14,7 +14,6 @@
           :label="shelf.name"
           :value="shelf.id"
           v-model="selected"
-          :ref="'checkbox'+shelf.id"
         ></v-checkbox>
       </v-card-text>
       <v-card-text v-else>

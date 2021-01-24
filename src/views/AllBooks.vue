@@ -1,6 +1,6 @@
 <template>
   <div class="blue-grey lighten-4">
-    <v-alert>{{ error }}</v-alert>
+    <v-alert v-if="error" type="error">{{ error }}</v-alert>
     <v-row class="mainRow">
       <v-col lg="4" sm="12" v-for="book in books" :key="book.id" ref="cardCol">
         <v-card class="card">

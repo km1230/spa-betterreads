@@ -128,4 +128,7 @@ export default class extends Vue {
 .cardAction {
   justify-content: flex-end;
 }
+.col {
+  flex-basis: auto;
+}
 </style>
