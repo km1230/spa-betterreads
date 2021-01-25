@@ -99,10 +99,16 @@ export default class extends Vue {
   }
 
   async updateStatus(id: string) {
-    // TO-DO
-    // update shelfbook status with this.selected
-    // getusershelfbooks | getusershlves 
-    // toggleSnackbar
+    try {
+      let {data} = await Shelfbook.find(id);
+      data.status = this.selected;
+      await data.save();      
+      await this.getUserShelves();
+    } catch (e) {
+      this.error = e.response ? e.response.errors[0].detail : 'Unknown error';
+    } finally {
+      this.toggleSnackbar(id)
+    }
   }
 
   toggleSnackbar(id: string) {
