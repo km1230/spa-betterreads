@@ -1,6 +1,6 @@
 <template>
   <div class="home blue-grey lighten-5">
-    <v-alert>{{error}}</v-alert>
+    <v-alert v-if="error" type="error">{{error}}</v-alert>
     <!-- Show carousel to annonymus users -->
     <div class="red white--text">{{ this.error }}</div>
     <div class="carousel" v-if="!isLoggedIn">

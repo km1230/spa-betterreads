@@ -12,7 +12,7 @@
         color="primary"
       ></v-progress-circular>
     </v-overlay>
-    <v-snackbar v-model="showSnackbar" :timeout="0">
+    <v-snackbar v-model="showSnackbar" :timeout="-1">
       <div>
         <div v-for="(snack, i) in snacks" :key="i">
           {{ snack }}

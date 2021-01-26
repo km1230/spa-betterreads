@@ -50,7 +50,9 @@ import { Component, Prop, Vue } from 'vue-property-decorator';
 import { authModule } from '@/store';
 import { User } from '@/api';
 
-@Component
+@Component({
+  name: 'Registration'
+})
 export default class extends Vue {
   email: string = '';
 

@@ -2,6 +2,11 @@
   <div class="blue-grey lighten-4">
     <v-alert v-if="error" type="error">{{ error }}</v-alert>
     <v-row class="mainRow">
+      <v-col sm="12" class="teal white--text d-flex justify-center">
+        <h2>All Books</h2>
+      </v-col>
+    </v-row>
+    <v-row>
       <v-col lg="4" sm="12" v-for="book in books" :key="book.id" ref="cardCol">
         <v-card class="card">
           <v-img height="300" src="https://picsum.photos/200/300" />
@@ -24,10 +29,13 @@ import { Component, Prop, Vue } from 'vue-property-decorator';
 import { Book, Category } from '@/api';
 import { authModule } from '@/store';
 
-@Component({})
+@Component({
+  name: 'AllBooks'
+})
 export default class extends Vue {
   books: Book[] | null = null;
   error: string = '';
+  snackbar: boolean = false;
 
   async getAllBooks() {
     try {
@@ -38,8 +46,16 @@ export default class extends Vue {
     }
   }
 
+  toggleSnackbar() {
+    this.snackbar = !this.snackbar;
+  }
+
   get isLoggedIn() {
     return authModule.isLoggedIn;
+  }
+
+  get isStaff() {
+    return authModule.isStaff;
   }
 
   mounted() {

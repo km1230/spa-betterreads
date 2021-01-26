@@ -1,21 +1,31 @@
 <template>
-  <header id="page-header">
-    <a href="/"
-      ><img id="page-header-logo" src="@/assets/library.png" alt="Base"
-    /></a>
-    <div class="right">
-      <nav id="page-header-menu">
-        <ul>
-          <li v-for="(item, i) in filteredMenu" :key="i">
-            <router-link :to="item.to">{{ item.title }}</router-link>
-          </li>
-          <li v-if="isLoggedIn">
-            <a @click.prevent="logout">Logout</a>
-          </li>
-        </ul>
-      </nav>
-    </div>
-  </header>
+ 
+    
+
+
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+      <div class="container-fluid">
+        <a href="/">
+          <img id="page-header-logo" src="@/assets/library.png" alt="Base"/>
+        </a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+          <ul class="navbar-nav">
+            <li v-for="(item, i) in filteredMenu" :key="i" class="nav-item">
+              <router-link :to="item.to" class="nav-link">{{ item.title }}</router-link>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+
+
+
+
+  
 </template>
 
 <script lang="ts">
@@ -154,5 +164,9 @@ export default class extends Vue {
   li + li {
     margin-left: 1rem;
   }
+}
+
+#page-header-logo {
+  max-width: 100px;
 }
 </style>
