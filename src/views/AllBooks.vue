@@ -1,22 +1,23 @@
 <template>
-  <div class="blue-grey lighten-4">
+  <div class="main">
     <v-alert v-if="error" type="error">{{ error }}</v-alert>
-    <v-row class="mainRow">
+    <v-row class="pa-4">
       <v-col sm="12" class="teal white--text d-flex justify-center">
         <h2>All Books</h2>
       </v-col>
     </v-row>
-    <v-row>
-      <v-col lg="4" sm="12" v-for="book in books" :key="book.id" ref="cardCol">
-        <v-card class="card">
+    <v-row class="pa-4">
+      <v-col lg="4" sm="12" v-for="book in books" :key="book.id">
+        <v-card class="card" elevation="10">
           <v-card-title class="black white--text"
             >{{ book.title }} - {{ book.author }}</v-card-title
           >
-          <v-card-subtitle class="mt-4">{{
+          <v-card-subtitle class="mt-3">{{
             book.category.name
           }}</v-card-subtitle>
           <v-img
-            height="300"
+            width="100%"
+            max-height="300"
             :contain="true"
             :src="book.cover ? book.cover : 'https://picsum.photos/200/300'"
           />
@@ -24,7 +25,7 @@
           <v-card-actions v-if="isLoggedIn">
             <v-btn
               block
-              class="blue white--text"
+              class="blue-grey darken-1 white--text"
               @click="getBookDetail(book.id)"
             >
               Book Detail
@@ -81,19 +82,18 @@ export default class extends Vue {
 </script>
 
 <style lang="scss">
+.main {
+  height: 100%;
+  padding-left: 20px;
+  padding-right: 20px;
+}
 .error {
   background-color: red;
   color: white;
   font-size: 1rem;
   padding: 10px;
 }
-.mainRow {
-  padding: 20px;
-}
 .card {
-  height: 500px;
-}
-.description {
-  padding: 20px;
+  height: 400px !important;
 }
 </style>

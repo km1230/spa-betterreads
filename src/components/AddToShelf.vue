@@ -24,13 +24,11 @@
         Create one? <br />
         <v-text-field v-model="newShelfName" label="New Shelf Name" clearable />
       </v-card-text>
-      <v-card-actions v-if="retrieveShelves && !userHasBook">
-        <v-btn block class="blue white--text" @click="chooseShelf">Add</v-btn>
-      </v-card-actions>
-      <v-card-actions v-else-if="retrieveShelves && userHasBook">
-        <v-btn block class="blue white--text" @click="removeShelfBook"
+      <v-card-actions v-if="retrieveShelves && retrieveShelves.length > 0">
+        <v-btn block class="blue white--text" v-if="!userHasBook" @click="chooseShelf">Add</v-btn>
+        <v-btn block class="blue white--text" v-else @click="removeShelfBook"
           >Update</v-btn
-        >
+        >      
       </v-card-actions>
       <v-card-actions v-else>
         <v-btn block class="blue white--text" @click="createShelf"

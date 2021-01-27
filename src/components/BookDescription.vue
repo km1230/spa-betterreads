@@ -27,7 +27,7 @@
       :src="book && book.cover ? book.cover : 'https://picsum.photos/200/300'"
     />
     <div class="bookDescription blue-grey lighten-5">
-      <v-btn text elevation="10" class="lime mr-3" @click="goEditBook(book.id)">
+      <v-btn text elevation="10" class="lime mr-3" v-if="isStaff" @click="goEditBook(book.id)">
         <v-icon class="left white--text">mdi-circle-edit-outline</v-icon>Edit
       </v-btn>
       {{ book ? book.description : '' }}
@@ -38,6 +38,7 @@
 <script lang="ts">
 import { Component, Prop, Vue } from 'vue-property-decorator';
 import { Book } from '@/api';
+import { authModule } from '@/store';
 
 @Component({ name: 'BookDescription' })
 export default class extends Vue {
@@ -46,6 +47,10 @@ export default class extends Vue {
 
   goEditBook(id: string) {
     this.$router.push({ name: 'edit-book', params: { id } });
+  }
+
+  get isStaff() {
+    return authModule.isStaff;
   }
 }
 </script>

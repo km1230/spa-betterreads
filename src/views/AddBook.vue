@@ -38,7 +38,7 @@
             required
           ></v-text-field>
 
-          <v-btn block class="blue white--text mr-4 mt-3" type="submit">
+          <v-btn block class="blue-grey darken-1 white--text mr-4 mt-3" type="submit">
             submit
           </v-btn>
           <v-btn

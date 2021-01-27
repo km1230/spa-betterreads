@@ -1,16 +1,16 @@
 <template>
   <div class="blue-grey lighten-4 main">
     <v-alert v-if="error" type="error">{{ error }}</v-alert>
-    <v-row>
+    <v-row v-if="isStaff">
       <v-col sm="12" class="text-center">
         <h2 class="teal white--text pa-4">Edit Book Detail</h2>
       </v-col>
       <v-col
         sm="12"
         lg="4"
-        offset-lg="4"
-        v-if="isStaff"
-        class="grey lighten-4 pa-8"
+        offset-lg="4"        
+        class="grey lighten-4 pa-8 formCol"
+        id="detailForm"
       >
         <v-form @submit.prevent="submitForm">
           <v-text-field
@@ -57,10 +57,9 @@
           </v-btn>
         </v-form>
       </v-col>
-    </v-row>
+    
 
-    <v-row v-if="isEditCover">
-      <v-col sm="12" lg="4" offset-lg="4">
+      <v-col sm="12" lg="4" v-if="isEditCover" id="dropzone" class="formCol">
         <vue-dropzone
           id="dropzone"
           :options="dzOptions"
@@ -154,6 +153,11 @@ export default class extends Vue {
   }
 
   get isEditCover() {
+    if(this.editCover) {
+      let detailForm = document.querySelector('#detailForm');
+      detailForm.classList.remove('offset-lg-4');
+      detailForm.classList.add('offset-lg-2')
+    }
     return this.editCover;
   }
 
@@ -184,7 +188,7 @@ export default class extends Vue {
     return dropzoneOptions;
   }
 
-  mounted() {
+  mounted() {    
     this.getBookDetail();
     this.getAllCategories();
   }
@@ -210,5 +214,9 @@ export default class extends Vue {
   img {
     width: 200px;
   }
+}
+
+.formCol {
+  transition: all 1s cubic-bezier(.24,.47,.22,.91);
 }
 </style>

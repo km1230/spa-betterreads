@@ -1,39 +1,39 @@
 <template>
-  <div class="home blue-grey lighten-5">
+  <div class="main">
     <v-alert v-if="error" type="error">{{ error }}</v-alert>
 
     <!-- Show their/public shelves when users logged in -->
-    <div class="trending">
-      <div class="text-center greeting">
-        Welcome back <strong>{{ username.replace(/@.*/, '') }}!</strong>
-      </div>
-      <div class="text-center readingHeadline teal white--text">
-        <h3>People are reading...</h3>
-      </div>
-      <v-row class="mt-4">
+      <v-row class="pa-4">        
+        <v-col class="teal white--text d-flex justify-center">
+          <h2>People Are Reading...</h2>          
+        </v-col>
+        <v-col class="text-center">
+          <p>Welcome back <strong>{{ username.replace(/@.*/, '') }}!</strong></p>
+        </v-col>
+      </v-row>
+      <v-row class="pa-4">
         <v-col
           lg="4"
           sm="12"
-          v-for="book in books.slice(0, 3)"
+          v-for="book in books.slice(0, 4)"
           :key="book.id"
-          ref="cardCol"
         >
-          <v-card>
+          <v-card class="card">
             <v-card-title class="black white--text">{{
               book.title
             }}</v-card-title>
             <v-card-subtitle class="mt-3">{{ book.author }}</v-card-subtitle>
             <v-img
-              class="bookCovers"
-              contain
-              max-height="400px"
+              width="100%"
+              max-height="300"
+              :contain="true"
               :src="book.cover ? book.cover : 'https://picsum.photos/200/300'"
             />
 
             <v-card-actions v-if="isLoggedIn">
               <v-btn
                 block
-                class="blue white--text"
+                class="blue-grey darken-1 white--text"
                 @click="goBookDetail(book.id)"
                 >Book Detail</v-btn
               >
@@ -117,21 +117,15 @@ export default class extends Vue {
 </script>
 
 <style lang="scss">
-.home {
+.main {
   height: 100%;
   padding-left: 20px;
   padding-right: 20px;
 }
-.greeting {
-  padding: 20px;
-}
-.readingHeadline {
-  padding: 20px;
-}
 .col {
   flex-basis: auto;
 }
-.bookCovers {
-  justify-items: center;
+.card {
+  height: 500px !important;
 }
 </style>
