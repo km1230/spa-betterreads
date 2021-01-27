@@ -1,31 +1,34 @@
 <template>
- 
-    
-
-
-    <nav class="navbar navbar-expand-lg navbar-light bg-light">
-      <div class="container-fluid">
-        <a href="/">
-          <img id="page-header-logo" src="@/assets/library.png" alt="Base"/>
-        </a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-          <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarNav">
-          <ul class="navbar-nav">
-            <li v-for="(item, i) in filteredMenu" :key="i" class="nav-item">
-              <router-link :to="item.to" class="nav-link">{{ item.title }}</router-link>
-            </li>
-          </ul>
-        </div>
+  <nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <div class="container-fluid">
+      <a href="/">
+        <img id="page-header-logo" src="@/assets/library.png" alt="Base" />
+      </a>
+      <button
+        class="navbar-toggler"
+        type="button"
+        data-bs-toggle="collapse"
+        data-bs-target="#navbarNav"
+        aria-controls="navbarNav"
+        aria-expanded="false"
+        aria-label="Toggle navigation"
+      >
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav">
+          <li v-for="(item, i) in filteredMenu" :key="i" class="nav-item">
+            <router-link :to="item.to" class="nav-link">{{
+              item.title
+            }}</router-link>
+          </li>
+          <li v-if="isLoggedIn" class="nav-item">
+            <a @click="logout" class="nav-link">Logout</a>
+          </li>
+        </ul>
       </div>
-    </nav>
-
-
-
-
-
-  
+    </div>
+  </nav>
 </template>
 
 <script lang="ts">

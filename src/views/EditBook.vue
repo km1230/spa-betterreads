@@ -1,9 +1,9 @@
 <template>
   <div class="blue-grey lighten-4 main">
     <v-alert v-if="error" type="error">{{ error }}</v-alert>
-    <v-row v-if="!isBookCreated">
+    <v-row>
       <v-col sm="12" class="text-center">
-        <h2 class="teal white--text pa-4">Add New Book</h2>
+        <h2 class="teal white--text pa-4">Edit Book Detail</h2>
       </v-col>
       <v-col
         sm="12"
@@ -38,8 +38,15 @@
             required
           ></v-text-field>
 
-          <v-btn block class="blue white--text mr-4 mt-3" type="submit">
-            submit
+          <v-btn block class="amber white--text mr-4 mt-3" type="submit">
+            Update
+          </v-btn>
+          <v-btn
+            block
+            class="pink white--text mr-4 mt-3"
+            @click="editCover = true"
+          >
+            Upload New Cover
           </v-btn>
           <v-btn
             block
@@ -52,8 +59,8 @@
       </v-col>
     </v-row>
 
-    <v-row v-else>
-      <v-col>
+    <v-row v-if="isEditCover">
+      <v-col sm="12" lg="4" offset-lg="4">
         <vue-dropzone
           id="dropzone"
           :options="dzOptions"
@@ -81,13 +88,14 @@ import router from '@/router';
 })
 export default class extends Vue {
   categories: Category[] = [];
-  error: string = '';
   categoryNames: string[] = [];
   title: string = '';
   author: string = '';
   category: string = '';
   description: string = '';
   book: Book | null = null;
+  editCover: boolean = false;
+  error: string = '';
 
   async getAllCategories() {
     try {
@@ -101,21 +109,41 @@ export default class extends Vue {
     }
   }
 
+  async getBookDetail() {
+    try {
+      let { data } = await Book.includes('category').find(
+        this.$route.params.id,
+      );
+      this.book = data;
+      this.title = data.title;
+      this.author = data.author;
+      this.description = data.description;
+      this.category = data.category.name;
+    } catch (e) {
+      this.error = e.response ? e.response.errors : 'Unknown error';
+    }
+  }
+
   async submitForm() {
     try {
       // get category instance
-      let { data } = await Category.where({ name: this.category }).all();
+      let response = await Category.where({ name: this.category }).all();
+      let cat = response.data ? response.data[0] : null;
 
       // Add new Book with / without image
-      if (data) {
-        let newBook = await Book.newBook(
-          this.title,
-          this.author,
-          this.description,
-          data[0],
-        );
-        this.book = newBook;
+      let { data } = await Book.find(this.$route.params.id);
+
+      if (data && cat) {
+        data.title = this.title;
+        data.author = this.author;
+        data.description = this.description;
+        data.category = cat;
+        await data.save();
       }
+      this.$router.push({
+        name: 'book-detail',
+        params: { id: this.$route.params.id },
+      });
     } catch (e) {
       this.error = e.response ? e.response.errors : 'Unknown error';
     }
@@ -125,8 +153,12 @@ export default class extends Vue {
     if (file) this.$router.push({ name: 'all-books' });
   }
 
-  get isBookCreated() {
-    return this.book ? true : false;
+  get isEditCover() {
+    return this.editCover;
+  }
+
+  get bookDetail() {
+    return this.book;
   }
 
   get isStaff() {
@@ -153,6 +185,7 @@ export default class extends Vue {
   }
 
   mounted() {
+    this.getBookDetail();
     this.getAllCategories();
   }
 }

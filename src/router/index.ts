@@ -5,6 +5,7 @@ import AddBook from '@/views/AddBook.vue';
 import Admin from '@/views/Admin.vue';
 import AllBooks from '@/views/AllBooks.vue';
 import BookDetail from '@/views/BookDetail.vue';
+import EditBook from '@/views/EditBook.vue';
 import Home from '@/views/Home.vue';
 import Login from '@/views/Login.vue';
 import NotFound from '@/views/NotFound.vue';
@@ -40,6 +41,14 @@ const routes = [
     component: AddBook,
     meta: {
       title: 'Add New Book',
+    },
+  },
+  {
+    path: '/edit-book/:id',
+    name: 'edit-book',
+    component: EditBook,
+    meta: {
+      title: 'Edit Book',
     },
   },
   {

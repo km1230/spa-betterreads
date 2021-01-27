@@ -9,14 +9,26 @@
     <v-row>
       <v-col lg="4" sm="12" v-for="book in books" :key="book.id" ref="cardCol">
         <v-card class="card">
-          <v-img height="300" src="https://picsum.photos/200/300" />
-          <v-card-title>{{ book.title }} - {{ book.author }}</v-card-title>
-          <v-card-subtitle>{{ book.category.name }}</v-card-subtitle>
-          <v-card-text class="description">{{ book.description }}</v-card-text>
-          <v-card-actions class="cardAction" v-if="isLoggedIn">
-            <router-link :to="{ name: 'book-detail', params: { id: book.id } }">
-              <v-btn class="blue white--text">Book Detail</v-btn>
-            </router-link>
+          <v-card-title class="black white--text"
+            >{{ book.title }} - {{ book.author }}</v-card-title
+          >
+          <v-card-subtitle class="mt-4">{{
+            book.category.name
+          }}</v-card-subtitle>
+          <v-img
+            height="300"
+            :contain="true"
+            :src="book.cover ? book.cover : 'https://picsum.photos/200/300'"
+          />
+          <!-- Only authenticated user can view book detail -->
+          <v-card-actions v-if="isLoggedIn">
+            <v-btn
+              block
+              class="blue white--text"
+              @click="getBookDetail(book.id)"
+            >
+              Book Detail
+            </v-btn>
           </v-card-actions>
         </v-card>
       </v-col>
@@ -30,7 +42,7 @@ import { Book, Category } from '@/api';
 import { authModule } from '@/store';
 
 @Component({
-  name: 'AllBooks'
+  name: 'AllBooks',
 })
 export default class extends Vue {
   books: Book[] | null = null;
@@ -44,6 +56,10 @@ export default class extends Vue {
     } catch (e) {
       this.error = e.response ? e.response.errors[0].detail : 'Unknown error';
     }
+  }
+
+  getBookDetail(id: string) {
+    this.$router.push({ name: 'book-detail', params: { id } });
   }
 
   toggleSnackbar() {

@@ -40,7 +40,7 @@ export default class Review extends ApplicationRecord {
             rate,
             book,
         });
-        await review.save();
+        await review.save({ with: ['book.id', 'user.id'] });
         return review;
     }
 

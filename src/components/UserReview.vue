@@ -37,7 +37,7 @@ import { Component, Prop, Vue } from 'vue-property-decorator';
 import { User, Book, Review } from '@/api';
 import { authModule } from '@/store';
 
-@Component({name: 'UserReview'})
+@Component({ name: 'UserReview' })
 export default class extends Vue {
   @Prop() readonly bookReviews: Review[];
   @Prop() readonly currentUser: User;
@@ -57,7 +57,7 @@ export default class extends Vue {
       }
       this.reviewUpdated();
     } catch (e) {
-      this.error = e.response ? e.response.errors[0].detail : 'Unknown error';
+      this.$emit('hasError', e);
     }
   }
 
@@ -80,9 +80,7 @@ export default class extends Vue {
       }
       this.reviewUpdated();
     } catch (e) {
-      this.error = e.response ? e.response.errors[0].detail : 'Unknown error';
-    } finally {
-      this.$refs.reviewField.value = '';
+      this.$emit('hasError', e);
     }
   }
 

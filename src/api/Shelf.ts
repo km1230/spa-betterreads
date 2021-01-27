@@ -30,9 +30,14 @@ export default class Shelf extends ApplicationRecord {
     }
 
     static async newShelf(name: string, user: User) {
-        let shelf = new Shelf({name, user})
+        let shelf = new Shelf({ name, user })
         await shelf.save();
         return shelf;
+    }
+
+    static async delShelf(id: string) {
+        let { data } = await Shelf.find(id);
+        await data.destroy()
     }
 
     static scopeFactory() {

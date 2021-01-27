@@ -9,7 +9,7 @@
         shaped
       >
         <v-icon class="left white--text">mdi-account-box-outline</v-icon
-        >{{ (book) ? book.author : '' }}
+        >{{ book ? book.author : '' }}
       </v-sheet>
       <v-sheet
         color="purple light-4 white--text"
@@ -24,10 +24,13 @@
       class="bookImage"
       contain
       :light="true"
-      src="https://picsum.photos/200/300"
+      :src="book && book.cover ? book.cover : 'https://picsum.photos/200/300'"
     />
     <div class="bookDescription blue-grey lighten-5">
-      {{ (book) ? book.description : ''  }}
+      <v-btn text elevation="10" class="lime mr-3" @click="goEditBook(book.id)">
+        <v-icon class="left white--text">mdi-circle-edit-outline</v-icon>Edit
+      </v-btn>
+      {{ book ? book.description : '' }}
     </div>
   </v-col>
 </template>
@@ -36,10 +39,14 @@
 import { Component, Prop, Vue } from 'vue-property-decorator';
 import { Book } from '@/api';
 
-@Component({name: 'BookDescription'})
+@Component({ name: 'BookDescription' })
 export default class extends Vue {
   @Prop() book: Book;
   @Prop() category: string = '';
+
+  goEditBook(id: string) {
+    this.$router.push({ name: 'edit-book', params: { id } });
+  }
 }
 </script>
 

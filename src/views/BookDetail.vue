@@ -24,12 +24,12 @@
           />
 
           <!-- Add Book To Shelf -->
-          <add-to-shelf 
-            v-else 
+          <add-to-shelf
+            v-else
             :currentUser="currentUser"
             :userHasBook="isUserHasBook"
-            @cancel="toggleReview" 
-            @createShelf="addToNewShelf($event)" 
+            @cancel="toggleReview"
+            @createShelf="addToNewShelf($event)"
             @shelfChosen="addToChosenShelf($event)"
             @removeShelfbook="delShelfBook($event)"
           />
@@ -40,7 +40,9 @@
           <user-review
             :bookReviews="allBookReviews"
             :currentUser="currentUser"
+            :error="error"
             @reviewUpdated="getReviews"
+            @hasError="setError($event)"
           />
         </v-col>
       </v-row>
@@ -78,7 +80,7 @@ export default class extends Vue {
     try {
       let { data } = await Book.find(this.$route.params.id);
       this.book = data;
-      let cat = await Category.find(data.category.id);
+      let cat = await Category.find(this.book.category.id);
       this.category = cat.data.name;
     } catch (e) {
       this.error = e.response ? e.response.errors[0].detail : 'Unknown error';
@@ -96,8 +98,10 @@ export default class extends Vue {
 
   async deleteReviewContent() {
     try {
-      if(this.currentUser) {
-        let { data } = await Review.where({ user: this.currentUser.id }).first();
+      if (this.currentUser) {
+        let { data } = await Review.where({
+          user: this.currentUser.id,
+        }).first();
         if (data) {
           data.content = '';
           await data.save();
@@ -131,11 +135,10 @@ export default class extends Vue {
   }
 
   async addToNewShelf(shelfName: string) {
-    try {      
-      if(this.currentUser)
-      {        
+    try {
+      if (this.currentUser) {
         let shelf = await Shelf.newShelf(shelfName, this.currentUser);
-        if (shelf) await this.addBookToShelf(shelf)
+        if (shelf) await this.addBookToShelf(shelf);
       }
     } catch (e) {
       this.error = e.response ? e.response.errors[0].detail : 'Unknown error';
@@ -144,32 +147,40 @@ export default class extends Vue {
 
   async addToChosenShelf(shelves: Shelf[]) {
     for await (let shelf of shelves) {
-      this.addBookToShelf(shelf)
+      this.addBookToShelf(shelf);
     }
   }
 
   async addBookToShelf(shelf: Shelf) {
     try {
-      if(shelf && this.book) {
-        let result = await Shelfbook.newShelfbook(shelf, this.book, this.currentUser?.id);      
-      }      
+      if (shelf && this.book) {
+        let result = await Shelfbook.newShelfbook(
+          shelf,
+          this.book,
+          this.currentUser?.id,
+        );
+      }
     } catch (e) {
       this.error = e.response ? e.response.errors[0].detail : 'Unknown error';
     } finally {
-      this.findUserShelfbook()
-      this.toggleReview()
+      this.findUserShelfbook();
+      this.toggleReview();
     }
   }
 
-  async delShelfBook(sb: Shelfbook) {    
+  async delShelfBook(sb: Shelfbook) {
     try {
-      if(sb) await Shelfbook.delShelfBook(sb.id);
+      if (sb) await Shelfbook.delShelfBook(sb.id);
     } catch (e) {
       this.error = e.response ? e.response.errors[0].detail : 'Unknown error';
     } finally {
-      this.findUserShelfbook()
-      this.toggleReview()
+      this.findUserShelfbook();
+      this.toggleReview();
     }
+  }
+
+  setError(e: any) {
+    this.error = e.response.errors[0].detail;
   }
 
   get isUserHasBook() {

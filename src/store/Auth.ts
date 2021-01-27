@@ -30,6 +30,10 @@ export default class AuthModule extends VuexModule {
     return (roles: string[]): boolean => true;
   }
 
+  get sessionToken() {
+    return (this.session) ? this.session.token : '';
+  }
+
   @Mutation
   setReady() {
     this.ready = true;
