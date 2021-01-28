@@ -21,12 +21,7 @@
             >
           </v-card-actions>
           <v-card-actions>
-            <v-btn
-              block
-              class="blue-grey lighten-4 mt-2"
-              @click="
-                shelves.length > 0 ? (needCreateShelf = false) : clearForm
-              "
+            <v-btn block class="blue-grey lighten-4 mt-2" @click="cancelForm"
               >Cancel</v-btn
             >
           </v-card-actions>
@@ -41,7 +36,7 @@ import { Component, Prop, Vue } from 'vue-property-decorator';
 import { User, Shelf } from '@/api';
 import { authModule } from '@/store';
 
-@Component({ name: 'OtherReview' })
+@Component({ name: 'AddShelfForm' })
 export default class extends Vue {
   @Prop() readonly needCreateShelf: boolean;
   @Prop() readonly shelves: Shelf[];
@@ -54,6 +49,14 @@ export default class extends Vue {
       this.$emit('shelfAdded');
     } catch (e) {
       this.error = e.response ? e.response.errors[0].detail : 'Unknown error';
+    }
+  }
+
+  cancelForm() {
+    if (this.shelves.length > 0) {
+      this.$emit('cancelAddShelf');
+    } else {
+      this.clearForm();
     }
   }
 

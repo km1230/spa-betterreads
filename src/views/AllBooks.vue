@@ -1,39 +1,36 @@
 <template>
   <div class="main">
     <v-alert v-if="error" type="error">{{ error }}</v-alert>
+    <!-- Page title and search button -->
     <v-row class="pa-4">
       <v-col sm="12" class="teal white--text d-flex justify-center">
         <h2>All Books</h2>
+        <v-btn
+          outlined
+          color="grey lighten-2"
+          class="ml-lg-2"
+          @click="toggleSearch"
+        >
+          <v-icon>mdi-magnify</v-icon>
+        </v-btn>
       </v-col>
     </v-row>
+    <!-- Search bar -->
+    <v-row v-if="searching">
+      <v-col sm="12" lg="4" offset-lg="4" class="grey lighten-4 pa8">
+        <v-text-field
+          v-model="searchValue"
+          placeholder="Search book..."
+          id="navSearch"
+          color="blue-grey darken-4"
+          @input="searchBook"
+        />
+      </v-col>
+    </v-row>
+    <!-- Show books -->
     <v-row class="pa-4">
       <v-col lg="4" sm="12" v-for="book in books" :key="book.id">
-        <v-card class="card" elevation="10">
-          <v-card-title class="black white--text">{{
-            book.title
-          }}</v-card-title>
-          <v-card-subtitle class="mt-3">{{
-            book.category.name
-          }}</v-card-subtitle>
-          <div class="img-container">
-            <v-img
-              width="100%"
-              max-height="300"
-              :contain="true"
-              :src="book.cover ? book.cover : 'https://picsum.photos/200/300'"
-            />
-          </div>
-          <!-- Only authenticated user can view book detail -->
-          <v-card-actions v-if="isLoggedIn">
-            <v-btn
-              block
-              class="blue-grey darken-1 white--text"
-              @click="getBookDetail(book.id)"
-            >
-              Book Detail
-            </v-btn>
-          </v-card-actions>
-        </v-card>
+        <book-card :book="book" />
       </v-col>
     </v-row>
   </div>
@@ -43,14 +40,20 @@
 import { Component, Prop, Vue } from 'vue-property-decorator';
 import { Book, Category } from '@/api';
 import { authModule } from '@/store';
+import BookCard from '@/components/BookCard.vue';
 
 @Component({
   name: 'AllBooks',
+  components: {
+    BookCard,
+  },
 })
 export default class extends Vue {
   books: Book[] | null = null;
   error: string = '';
   snackbar: boolean = false;
+  searching: boolean = false;
+  searchValue: string = '';
 
   async getAllBooks() {
     try {
@@ -61,12 +64,21 @@ export default class extends Vue {
     }
   }
 
-  getBookDetail(id: string) {
-    this.$router.push({ name: 'book-detail', params: { id } });
+  async searchBook() {
+    try {
+      let { data } = await Book.where({ search: this.searchValue }).all();
+      if (data) this.books = data;
+    } catch (e) {
+      this.error = e.response ? e.response.errors[0].detail : 'Unknown error';
+    }
   }
 
   toggleSnackbar() {
     this.snackbar = !this.snackbar;
+  }
+
+  toggleSearch() {
+    this.searching = !this.searching;
   }
 
   get isLoggedIn() {

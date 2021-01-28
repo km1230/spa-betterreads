@@ -1,7 +1,7 @@
 <template>
   <!-- Book detail -->
   <v-col lg="7" sm="12">
-    <v-row>
+    <v-row class="my-2">
       <v-sheet
         color="blue-grey darken-1"
         class="white--text shape"
@@ -25,7 +25,7 @@
       <v-btn
         text
         elevation="10"
-        class="amber white--text mr-3 round-md"
+        class="orange darken-1 white--text mr-3 round-md"
         v-if="isStaff"
         @click="goEditBook(book.id)"
       >

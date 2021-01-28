@@ -51,10 +51,8 @@
               "
             />
             <v-divider />
-            <v-card-text class="status grey lighten-2">
-              <v-icon
-                v-if="shelfbook.status === 'wish'"
-                color="yellow lighten-1"
+            <v-card-text class="status grey lighten-4">
+              <v-icon v-if="shelfbook.status === 'wish'" color="amber"
                 >mdi-bookmark-multiple</v-icon
               >
               <v-icon
@@ -85,50 +83,21 @@
             <v-card-actions>
               <v-btn
                 block
-                class="amber white--text"
+                class="orange darken-1 white--text"
                 @click="toggleSnackbar(shelfbook.id)"
                 >Change Status</v-btn
               >
             </v-card-actions>
           </v-card>
-
-          <!-- Snackbar for editing shelfbook status -->
-          <v-snackbar
-            v-model="snackbarStatus[shelfbook.id]"
-            :centered="true"
-            :timeout="-1"
-          >
-            <v-row>
-              <v-col sm="12">
-                <h3>{{ shelfbook.book.title }}</h3>
-              </v-col>
-              <v-divider />
-              <v-col sm="12">
-                <v-checkbox
-                  v-for="s in status"
-                  :key="status.indexOf(s)"
-                  v-model="selected"
-                  :label="s"
-                  :value="s"
-                />
-              </v-col>
-              <v-col sm="12">
-                <v-btn
-                  block
-                  color="yellow darken-2"
-                  @click="updateStatus(shelfbook.id)"
-                  >Confirm</v-btn
-                >
-              </v-col>
-              <v-col sm="12">
-                <v-btn block color="grey" @click="toggleSnackbar(shelfbook.id)"
-                  >Cancel</v-btn
-                >
-              </v-col>
-            </v-row>
-          </v-snackbar>
         </v-col>
       </v-row>
+      <shelfbook-snack
+        :snackbarStatus="snackbarStatus"
+        :shelfbook="shelfbookToLoad"
+        :status="status"
+        @toggleSnackbar="toggleSnackbar($event)"
+        @updateStatus="updateStatus($event)"
+      />
     </div>
 
     <!-- Create shelf form -->
@@ -137,6 +106,7 @@
         @shelfAdded="getUserShelves"
         :shelves="shelves"
         :needCreateShelf="needCreateShelf"
+        @cancelAddShelf="toggleCreateShelf"
       />
     </div>
   </div>
@@ -146,13 +116,14 @@
 import { Component, Prop, Vue } from 'vue-property-decorator';
 import { User, Shelf, Shelfbook } from '@/api';
 import { authModule } from '@/store';
-import router from '@/router';
+import ShelfbookSnack from '@/components/ShelfbookSnack.vue';
 import AddShelfForm from '@/components/AddShelfForm.vue';
 
 @Component({
   name: 'Shelfbook',
   components: {
     AddShelfForm,
+    ShelfbookSnack,
   },
 })
 export default class extends Vue {
@@ -160,10 +131,10 @@ export default class extends Vue {
   shelfbooks: Shelfbook[] = [];
   shelfbooksOfShelf: {} = {};
   status: string[] = ['wish', 'reading', 'read'];
-  selected: string = '';
-  snackbar: {} = {};
+  snackbar: boolean = false;
   error: string = '';
   needCreateShelf: boolean = true;
+  selectedShelfbook: Shelfbook | null = null;
 
   async getUserShelves() {
     try {
@@ -191,11 +162,8 @@ export default class extends Vue {
         })
         .all();
       if (data) this.shelfbooks = data;
-      // turn off snackbar for each shelfbook
-      this.shelfbooks.forEach((sb) => {
-        this.snackbar[sb.id] = false;
-      });
-      // shelfbooksOfShelf
+
+      // Populate shelfbooksOfShelf
       this.shelves.forEach((s) => {
         this.shelfbooksOfShelf[s.id] = [];
         this.shelfbooks.map((sb) => {
@@ -207,27 +175,18 @@ export default class extends Vue {
     }
   }
 
-  async updateStatus(id: string) {
+  async updateStatus(event: []) {
     try {
-      let { data } = await Shelfbook.find(id);
-      data.status = this.selected;
+      let { data } = await Shelfbook.find(event[0]);
+      data.status = event[1];
       await data.save();
       await this.getUserShelves();
     } catch (e) {
       this.error = e.response ? e.response.errors[0].detail : 'Unknown error';
     } finally {
-      this.toggleSnackbar(id);
+      this.toggleSnackbar();
     }
   }
-
-  // async createNewShelf() {
-  //   try {
-  //     await Shelf.newShelf(this.newShelfName, this.currentUser);
-  //     await this.getUserShelves();
-  //   } catch (e) {
-  //     this.error = e.response ? e.response.errors[0].detail : 'Unknown error';
-  //   }
-  // }
 
   async deleteShelf(id: string) {
     try {
@@ -238,22 +197,21 @@ export default class extends Vue {
     }
   }
 
-  // clearForm() {
-  //   document.querySelectorAll('input').forEach((i) => {
-  //     i.value = '';
-  //   });
-  // }
-
   goToAllBooks() {
     this.$router.push({ name: 'all-books' });
   }
 
   toggleSnackbar(id: string) {
-    if (!this.snackbar[id]) {
-      let shelfbook = this.shelfbooks.filter((sb) => sb.id === id);
-      this.selected = shelfbook.length > 0 ? shelfbook[0].status : '';
-    }
-    this.snackbar[id] = !this.snackbar[id];
+    this.selectedShelfbook = this.shelfbooks.filter((sb) => sb.id === id)[0];
+    this.snackbar = !this.snackbar;
+  }
+
+  toggleCreateShelf() {
+    this.needCreateShelf = !this.needCreateShelf;
+  }
+
+  get shelfbookToLoad() {
+    return this.selectedShelfbook;
   }
 
   get snackbarStatus() {

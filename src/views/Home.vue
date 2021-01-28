@@ -18,28 +18,7 @@
           v-for="book in books.slice(0, 4)"
           :key="book.id"
         >
-          <v-card class="card">
-            <v-card-title class="black white--text">{{
-              book.title
-            }}</v-card-title>
-            <v-card-subtitle class="mt-3">{{ book.author }}</v-card-subtitle>
-            <div class="img-container">
-              <v-img
-                width="100%"
-                max-height="300"
-                :contain="true"
-                :src="book.cover ? book.cover : 'https://picsum.photos/200/300'"
-              />
-            </div>
-            <v-card-actions v-if="isLoggedIn">
-              <v-btn
-                block
-                class="blue-grey darken-1 white--text"
-                @click="goBookDetail(book.id)"
-                >Book Detail</v-btn
-              >
-            </v-card-actions>
-          </v-card>
+          <book-card :book="book"/> 
         </v-col>
       </v-row>
     </div>
@@ -48,14 +27,14 @@
 
 <script lang="ts">
 import { Component, Prop, Vue } from 'vue-property-decorator';
-import LoginForm from '@/components/auth/LoginForm.vue';
+import BookCard from '@/components/BookCard.vue';
 import { authModule } from '../store';
 import { Book, Shelf } from '@/api';
 
 @Component({
   name: 'Home',
   components: {
-    LoginForm,
+    BookCard,
   },
 })
 export default class extends Vue {

@@ -38,9 +38,10 @@
 <script lang="ts">
 import { Component, Prop, Vue } from 'vue-property-decorator';
 import { authModule } from '@/store';
+import { Book } from '@/api';
 
 @Component({
-  components: {},
+  name: 'PageHeader',
 })
 export default class extends Vue {
   menu = [
@@ -87,10 +88,6 @@ export default class extends Vue {
       show: () => !this.isLoggedIn,
     },
   ];
-
-  search: string = '';
-
-  searchFocused: boolean = false;
 
   get filteredMenu() {
     return this.menu.filter((item) => item.show());

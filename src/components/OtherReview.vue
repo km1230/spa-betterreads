@@ -36,7 +36,7 @@
       <v-icon>mdi-comment-text-multiple</v-icon> Reviews
       <div v-for="review in bookReviews.slice(0, 3)" :key="review.id">
         <div
-          class="reviewsContent amber accent-4 white--text"
+          class="reviewsContent orange darken-1 white--text"
           v-if="review.content !== ''"
         >
           {{ review.content }}
