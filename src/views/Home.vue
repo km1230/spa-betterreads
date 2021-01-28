@@ -23,13 +23,14 @@
               book.title
             }}</v-card-title>
             <v-card-subtitle class="mt-3">{{ book.author }}</v-card-subtitle>
-            <v-img
-              width="100%"
-              max-height="300"
-              :contain="true"
-              :src="book.cover ? book.cover : 'https://picsum.photos/200/300'"
-            />
-
+            <div class="img-container">
+              <v-img
+                width="100%"
+                max-height="300"
+                :contain="true"
+                :src="book.cover ? book.cover : 'https://picsum.photos/200/300'"
+              />
+            </div>
             <v-card-actions v-if="isLoggedIn">
               <v-btn
                 block
@@ -127,5 +128,12 @@ export default class extends Vue {
 }
 .card {
   height: 500px !important;
+}
+.img-container {
+  height: 300px;
+  padding: 0%;
+  margin: 0%;
+  display: flex;
+  align-content: center;
 }
 </style>

@@ -25,10 +25,20 @@
         <v-text-field v-model="newShelfName" label="New Shelf Name" clearable />
       </v-card-text>
       <v-card-actions v-if="retrieveShelves && retrieveShelves.length > 0">
-        <v-btn block class="blue white--text" v-if="!userHasBook" @click="chooseShelf">Add</v-btn>
-        <v-btn block class="blue white--text" v-else @click="removeShelfBook"
+        <v-btn
+          block
+          class="blue white--text"
+          v-if="!userHasBook"
+          @click="chooseShelf"
+          >Add</v-btn
+        >
+        <v-btn
+          block
+          class="blue white--text"
+          v-else
+          @click="updateShelfBookList"
           >Update</v-btn
-        >      
+        >
       </v-card-actions>
       <v-card-actions v-else>
         <v-btn block class="blue white--text" @click="createShelf"
@@ -81,11 +91,17 @@ export default class extends Vue {
     this.$emit('cancel');
   }
 
-  removeShelfBook() {
-    let diff = this.shelfbooks.filter(
+  updateShelfBookList() {
+    // Unselected shelves
+    let unselected = this.shelfbooks.filter(
       (sb) => !this.selected.includes(sb.shelf.id),
     );
-    if (diff.length > 0) diff.forEach((d) => this.$emit('removeShelfbook', d));
+
+    // Added extra shelves
+    let original = this.shelfbooks.map((sb) => sb.shelf.id);
+    let extras = this.selected.filter((id) => !original.includes(id));
+
+    this.$emit('updateShelfbooks', [unselected, extras]);
   }
 
   async getUserShelves() {

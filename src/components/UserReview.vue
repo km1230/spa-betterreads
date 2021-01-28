@@ -12,6 +12,8 @@
           :value="Number(userRate)"
           class="rateBar"
           ref="rateBar"
+          background-color="blue-grey darken-1"
+          color="blue-grey darken-1"
           @input="updateRating"
         ></v-rating>
       </v-col>
@@ -27,7 +29,9 @@
           :placeholder="userReviewContent"
         />
       </v-col>
-      <v-btn class="blue white--text" block type="submit">Post Review</v-btn>
+      <v-btn class="blue-grey darken-1 white--text" block type="submit"
+        >Post Review</v-btn
+      >
     </form>
   </div>
 </template>
@@ -78,6 +82,8 @@ export default class extends Vue {
           data,
         );
       }
+
+      // refresh all reviews
       this.reviewUpdated();
     } catch (e) {
       this.$emit('hasError', e);

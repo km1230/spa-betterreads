@@ -2,7 +2,11 @@
   <nav class="navbar navbar-expand-lg navbar-light bg-light">
     <div class="container-fluid">
       <a href="/">
-        <img id="page-header-logo" src="@/assets/library.png" alt="Base" />
+        <img
+          id="page-header-logo"
+          src="@/assets/better_reads_logo.png"
+          alt="Base"
+        />
       </a>
       <button
         class="navbar-toggler"

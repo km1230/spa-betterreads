@@ -12,13 +12,20 @@
           :size="30"
           :value="avgRating"
           class="rateBar"
+          background-color="blue-grey darken-1"
+          color="blue-grey darken-1"
           ref="rateBar"
           :readonly="true"
         ></v-rating>
       </v-col>
       <!-- add to shelf -->
       <v-col sm="2">
-        <v-btn depressed outlined :color="userHasBook ? 'pink' : 'grey'" @click="hideReview">
+        <v-btn
+          depressed
+          outlined
+          :color="userHasBook ? 'pink' : 'grey'"
+          @click="hideReview"
+        >
           <v-icon>mdi-cards-heart</v-icon>
         </v-btn>
       </v-col>
@@ -52,7 +59,7 @@ import { Component, Prop, Vue } from 'vue-property-decorator';
 import { User, Review } from '@/api';
 import { authModule } from '@/store';
 
-@Component({name: 'OtherReview'})
+@Component({ name: 'OtherReview' })
 export default class extends Vue {
   @Prop() readonly bookReviews: Review[];
   @Prop() readonly currentUser: User;
@@ -64,7 +71,7 @@ export default class extends Vue {
   }
 
   hideReview() {
-    this.$emit('toggleReview')
+    this.$emit('toggleReview');
   }
 
   get avgRating() {

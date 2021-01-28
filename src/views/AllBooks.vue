@@ -9,18 +9,20 @@
     <v-row class="pa-4">
       <v-col lg="4" sm="12" v-for="book in books" :key="book.id">
         <v-card class="card" elevation="10">
-          <v-card-title class="black white--text"
-            >{{ book.title }} - {{ book.author }}</v-card-title
-          >
+          <v-card-title class="black white--text">{{
+            book.title
+          }}</v-card-title>
           <v-card-subtitle class="mt-3">{{
             book.category.name
           }}</v-card-subtitle>
-          <v-img
-            width="100%"
-            max-height="300"
-            :contain="true"
-            :src="book.cover ? book.cover : 'https://picsum.photos/200/300'"
-          />
+          <div class="img-container">
+            <v-img
+              width="100%"
+              max-height="300"
+              :contain="true"
+              :src="book.cover ? book.cover : 'https://picsum.photos/200/300'"
+            />
+          </div>
           <!-- Only authenticated user can view book detail -->
           <v-card-actions v-if="isLoggedIn">
             <v-btn
@@ -95,5 +97,12 @@ export default class extends Vue {
 }
 .card {
   height: 400px !important;
+}
+.img-container {
+  height: 300px;
+  padding: 0%;
+  margin: 0%;
+  display: flex;
+  align-content: center;
 }
 </style>

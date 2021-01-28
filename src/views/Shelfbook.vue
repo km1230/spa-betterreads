@@ -15,149 +15,129 @@
             <v-icon right darken>mdi-delete</v-icon>
           </v-btn>
         </v-col>
-        
-        <v-col sm="12">
-          <!-- show shelfbook detail -->
-          <v-row class="pa-4">
-            <!-- Button to browse All-Books if user has no shelfbook -->
-            <v-col sm="12" class="d-flex justify-center mt-4" v-if="userShelfbooks.length < 1">
-              <v-btn elevation="10" @click="goToAllBooks">
-                Add books to your shelf?<v-icon
-                  >mdi-arrow-right-bold-circle</v-icon
-                >
-              </v-btn>
-            </v-col>
-            <!-- Shelfbook card column -->
-            <div
-              v-for="shelfbook in userShelfbooks"
-              :key="shelfbook.id"
-            >
-              <v-col v-if="shelfbook.shelf.id === shelf.id" sm="12" lg="4">
-                <v-card class="shelfbookCard" elevation="10">
-                  <v-card-title class="black white--text">{{ shelfbook.book.title }}</v-card-title>
-                  <v-card-subtitle>{{ shelfbook.book.author }}</v-card-subtitle>
-                  <v-img
-                    width="100%"
-                    max-height="300"
-                    :contain="true"
-                    :src="
-                      shelfbook.book.cover
-                        ? shelfbook.book.cover
-                        : 'https://picsum.photos/200/300'
-                    "
-                  />
-                  <v-divider />
-                  <v-card-text class="status grey lighten-2">
-                    <v-icon
-                      v-if="shelfbook.status === 'wish'"
-                      color="yellow lighten-1"
-                      >mdi-bookmark-multiple</v-icon
-                    >
-                    <v-icon
-                      v-if="shelfbook.status === 'reading'"
-                      color="light-green darken-1"
-                      >mdi-book-open-variant</v-icon
-                    >
-                    <v-icon
-                      v-if="shelfbook.status === 'read'"
-                      color="light-blue darken-1"
-                      >mdi-book-check</v-icon
-                    >
-                    {{ shelfbook.status }}
-                  </v-card-text>
-                  <v-card-actions>
-                    <v-btn
-                      block
-                      class="blue-grey darken-1 white--text"
-                      @click="
-                        $router.push({
-                          name: 'book-detail',
-                          params: { id: shelfbook.book.id },
-                        })
-                      "
-                      >Book Detail</v-btn
-                    >
-                  </v-card-actions>
-                  <v-card-actions>
-                    <v-btn
-                      block
-                      class="amber white--text"
-                      @click="toggleSnackbar(shelfbook.id)"
-                      >Change Status</v-btn
-                    >
-                  </v-card-actions>
-                </v-card>
-                <v-snackbar v-model="snackbarStatus[shelfbook.id]" :centered="true" :timeout="-1">
-                  <v-row>
-                    <v-col sm="12">
-                      <h3>{{ shelfbook.book.title }}</h3>
-                    </v-col>
-                    <v-divider />
-                    <v-col sm="12">
-                      <v-checkbox
-                        v-for="s in status"
-                        :key="status.indexOf(s)"
-                        v-model="selected"
-                        :label="s"
-                        :value="s"
-                      />
-                    </v-col>
-                    <v-col sm="12">
-                      <v-btn
-                        block
-                        color="yellow darken-2"
-                        @click="updateStatus(shelfbook.id)"
-                        >Confirm</v-btn
-                      >
-                    </v-col>
-                    <v-col sm="12">
-                      <v-btn
-                        block
-                        color="grey"
-                        @click="toggleSnackbar(shelfbook.id)"
-                        >Cancel</v-btn
-                      >
-                    </v-col>
-                  </v-row>
-                </v-snackbar>
+
+        <!-- Button to browse All-Books if user has no shelfbook -->
+        <v-col
+          sm="12"
+          class="d-flex justify-center mt-4"
+          v-if="userShelfbooks.length < 1"
+        >
+          <v-btn elevation="10" @click="goToAllBooks">
+            Add books to your shelf?<v-icon>mdi-arrow-right-bold-circle</v-icon>
+          </v-btn>
+        </v-col>
+
+        <!-- Shelfbook column -->
+        <v-col
+          v-for="shelfbook in shelfbooksOfShelf[shelf.id]"
+          :key="shelfbook.id"
+          sm="12"
+          lg="4"
+        >
+          <!-- Shelfbook card -->
+          <v-card class="shelfbookCard" elevation="10">
+            <v-card-title class="black white--text">{{
+              shelfbook.book.title
+            }}</v-card-title>
+            <v-card-subtitle>{{ shelfbook.book.author }}</v-card-subtitle>
+            <v-img
+              width="100%"
+              max-height="300"
+              :contain="true"
+              :src="
+                shelfbook.book.cover
+                  ? shelfbook.book.cover
+                  : 'https://picsum.photos/200/300'
+              "
+            />
+            <v-divider />
+            <v-card-text class="status grey lighten-2">
+              <v-icon
+                v-if="shelfbook.status === 'wish'"
+                color="yellow lighten-1"
+                >mdi-bookmark-multiple</v-icon
+              >
+              <v-icon
+                v-if="shelfbook.status === 'reading'"
+                color="light-green darken-1"
+                >mdi-book-open-variant</v-icon
+              >
+              <v-icon
+                v-if="shelfbook.status === 'read'"
+                color="light-blue darken-1"
+                >mdi-book-check</v-icon
+              >
+              {{ shelfbook.status }}
+            </v-card-text>
+            <v-card-actions>
+              <v-btn
+                block
+                class="blue-grey darken-1 white--text"
+                @click="
+                  $router.push({
+                    name: 'book-detail',
+                    params: { id: shelfbook.book.id },
+                  })
+                "
+                >Book Detail</v-btn
+              >
+            </v-card-actions>
+            <v-card-actions>
+              <v-btn
+                block
+                class="amber white--text"
+                @click="toggleSnackbar(shelfbook.id)"
+                >Change Status</v-btn
+              >
+            </v-card-actions>
+          </v-card>
+
+          <!-- Snackbar for editing shelfbook status -->
+          <v-snackbar
+            v-model="snackbarStatus[shelfbook.id]"
+            :centered="true"
+            :timeout="-1"
+          >
+            <v-row>
+              <v-col sm="12">
+                <h3>{{ shelfbook.book.title }}</h3>
               </v-col>
-            </div>
-          </v-row>
+              <v-divider />
+              <v-col sm="12">
+                <v-checkbox
+                  v-for="s in status"
+                  :key="status.indexOf(s)"
+                  v-model="selected"
+                  :label="s"
+                  :value="s"
+                />
+              </v-col>
+              <v-col sm="12">
+                <v-btn
+                  block
+                  color="yellow darken-2"
+                  @click="updateStatus(shelfbook.id)"
+                  >Confirm</v-btn
+                >
+              </v-col>
+              <v-col sm="12">
+                <v-btn block color="grey" @click="toggleSnackbar(shelfbook.id)"
+                  >Cancel</v-btn
+                >
+              </v-col>
+            </v-row>
+          </v-snackbar>
         </v-col>
       </v-row>
     </div>
+
     <!-- Create shelf form -->
     <div v-else>
-      <v-row>
-        <v-col sm="12" class="d-flex justify-center teal white--text pa-4">
-          <h2>Create a shelf</h2>
-        </v-col>
-        <v-col sm="12" lg="4" offset-lg="4">
-          <v-card color="grey lighten-4 pa-4 mt-4" elevation="10">
-            <v-card-title>Name your new shelf</v-card-title>
-            <v-form @submit.prevent="createNewShelf">
-              <v-card-text>
-                <v-text-field
-                  v-model="newShelfName"
-                  label="Shelf name"
-                  :counter="20"
-                  type="text"
-                />
-              </v-card-text>
-              <v-card-actions>
-                <v-btn block class="blue-grey darken-4 white--text" type="submit"
-                  >Create</v-btn
-                >
-              </v-card-actions>
-              <v-card-actions>
-                <v-btn block class="blue-grey lighten-4 mt-2" @click="(userShelves.length > 0) ? (needCreateShelf = false) : clearForm"
-                  >Cancel</v-btn
-                >
-              </v-card-actions>
-            </v-form>
-          </v-card>
-        </v-col>
-      </v-row>
+      <add-shelf-form
+        @shelfAdded="getUserShelves"
+        :shelves="shelves"
+        :needCreateShelf="needCreateShelf"
+      />
     </div>
   </div>
 </template>
@@ -167,29 +147,35 @@ import { Component, Prop, Vue } from 'vue-property-decorator';
 import { User, Shelf, Shelfbook } from '@/api';
 import { authModule } from '@/store';
 import router from '@/router';
+import AddShelfForm from '@/components/AddShelfForm.vue';
 
 @Component({
   name: 'Shelfbook',
+  components: {
+    AddShelfForm,
+  },
 })
 export default class extends Vue {
   shelves: Shelf[] = [];
   shelfbooks: Shelfbook[] = [];
+  shelfbooksOfShelf: {} = {};
   status: string[] = ['wish', 'reading', 'read'];
   selected: string = '';
   snackbar: {} = {};
   error: string = '';
-  newShelfName: string = '';
   needCreateShelf: boolean = true;
 
   async getUserShelves() {
     try {
       let { data } = await Shelf.where({ user: this.currentUser?.id }).all();
-      if (data) {
+      if (data && data.length > 0) {
         this.shelves = data;
         this.needCreateShelf = false;
         for await (let shelf of this.shelves) {
           await this.getUserShelfbooks(shelf.id);
         }
+      } else {
+        this.needCreateShelf = true;
       }
     } catch (e) {
       this.error = e.response ? e.response.errors[0].detail : 'Unknown error';
@@ -198,15 +184,24 @@ export default class extends Vue {
 
   async getUserShelfbooks(shelfId: string) {
     try {
+      // get all shelvebooks of user
       let { data } = await Shelfbook.includes('book')
         .where({
           shelf__user: this.currentUser?.id,
         })
         .all();
       if (data) this.shelfbooks = data;
-      this.shelfbooks.forEach(sb => {
+      // turn off snackbar for each shelfbook
+      this.shelfbooks.forEach((sb) => {
         this.snackbar[sb.id] = false;
-      })
+      });
+      // shelfbooksOfShelf
+      this.shelves.forEach((s) => {
+        this.shelfbooksOfShelf[s.id] = [];
+        this.shelfbooks.map((sb) => {
+          if (sb.shelf.id === s.id) this.shelfbooksOfShelf[s.id].push(sb);
+        });
+      });
     } catch (e) {
       this.error = e.response ? e.response.errors[0].detail : 'Unknown error';
     }
@@ -225,14 +220,14 @@ export default class extends Vue {
     }
   }
 
-  async createNewShelf() {
-    try {
-      await Shelf.newShelf(this.newShelfName, this.currentUser);
-      await this.getUserShelves();
-    } catch (e) {
-      this.error = e.response ? e.response.errors[0].detail : 'Unknown error';
-    }
-  }
+  // async createNewShelf() {
+  //   try {
+  //     await Shelf.newShelf(this.newShelfName, this.currentUser);
+  //     await this.getUserShelves();
+  //   } catch (e) {
+  //     this.error = e.response ? e.response.errors[0].detail : 'Unknown error';
+  //   }
+  // }
 
   async deleteShelf(id: string) {
     try {
@@ -243,11 +238,11 @@ export default class extends Vue {
     }
   }
 
-  clearForm() {
-    document.querySelectorAll('input').forEach((i) => {
-      i.value = '';
-    });
-  }
+  // clearForm() {
+  //   document.querySelectorAll('input').forEach((i) => {
+  //     i.value = '';
+  //   });
+  // }
 
   goToAllBooks() {
     this.$router.push({ name: 'all-books' });
@@ -255,7 +250,6 @@ export default class extends Vue {
 
   toggleSnackbar(id: string) {
     if (!this.snackbar[id]) {
-      console.log(this.snackbar)
       let shelfbook = this.shelfbooks.filter((sb) => sb.id === id);
       this.selected = shelfbook.length > 0 ? shelfbook[0].status : '';
     }
@@ -266,7 +260,7 @@ export default class extends Vue {
     return this.snackbar;
   }
 
-  get doNeedCreateShelf() {    
+  get doNeedCreateShelf() {
     return this.needCreateShelf;
   }
 
@@ -283,7 +277,7 @@ export default class extends Vue {
   }
 
   mounted() {
-    this.getUserShelves();    
+    this.getUserShelves();
   }
 }
 </script>
@@ -301,5 +295,12 @@ export default class extends Vue {
   font-size: 1rem;
   padding: 20px !important;
   margin-top: 10px;
+}
+.img-container {
+  height: 300px;
+  padding: 0%;
+  margin: 0%;
+  display: flex;
+  align-content: center;
 }
 </style>

@@ -31,7 +31,7 @@
             @cancel="toggleReview"
             @createShelf="addToNewShelf($event)"
             @shelfChosen="addToChosenShelf($event)"
-            @removeShelfbook="delShelfBook($event)"
+            @updateShelfbooks="updateShelfBookList($event)"
           />
 
           <v-divider />
@@ -101,6 +101,7 @@ export default class extends Vue {
       if (this.currentUser) {
         let { data } = await Review.where({
           user: this.currentUser.id,
+          book: this.$route.params.id,
         }).first();
         if (data) {
           data.content = '';
@@ -128,10 +129,6 @@ export default class extends Vue {
     } catch (e) {
       this.error = e.response ? e.response.errors[0].detail : 'Unknown error';
     }
-  }
-
-  toggleReview() {
-    this.showReview = !this.showReview;
   }
 
   async addToNewShelf(shelfName: string) {
@@ -175,8 +172,31 @@ export default class extends Vue {
       this.error = e.response ? e.response.errors[0].detail : 'Unknown error';
     } finally {
       this.findUserShelfbook();
-      this.toggleReview();
     }
+  }
+
+  async extraShelfbook(id: string) {
+    try {
+      let { data } = await Shelf.find(id);
+      await Shelfbook.newShelfbook(data, this.book, this.currentUser?.id);
+    } catch (e) {
+      this.error = e.response ? e.response.errors[0].detail : 'Unknown error';
+    } finally {
+      this.findUserShelfbook();
+    }
+  }
+
+  updateShelfBookList(event: []) {
+    // Remove unselected shelfbooks
+    if (event[0].length > 0) event[0].forEach((sb) => this.delShelfBook(sb));
+
+    // Create new shelfbooks
+    if (event[1].length > 0) event[1].forEach((id) => this.extraShelfbook(id));
+    this.toggleReview();
+  }
+
+  toggleReview() {
+    this.showReview = !this.showReview;
   }
 
   setError(e: any) {

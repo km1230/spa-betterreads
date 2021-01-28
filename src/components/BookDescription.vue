@@ -11,12 +11,7 @@
         <v-icon class="left white--text">mdi-account-box-outline</v-icon
         >{{ book ? book.author : '' }}
       </v-sheet>
-      <v-sheet
-        color="purple light-4 white--text"
-        class="shape"
-        elevation="10"
-        shaped
-      >
+      <v-sheet color="grey lighten-2" class="shape" elevation="10" shaped>
         <v-icon class="left white--text">mdi-image-album</v-icon>{{ category }}
       </v-sheet>
     </v-row>
@@ -27,7 +22,13 @@
       :src="book && book.cover ? book.cover : 'https://picsum.photos/200/300'"
     />
     <div class="bookDescription blue-grey lighten-5">
-      <v-btn text elevation="10" class="lime mr-3" v-if="isStaff" @click="goEditBook(book.id)">
+      <v-btn
+        text
+        elevation="10"
+        class="amber white--text mr-3 round-md"
+        v-if="isStaff"
+        @click="goEditBook(book.id)"
+      >
         <v-icon class="left white--text">mdi-circle-edit-outline</v-icon>Edit
       </v-btn>
       {{ book ? book.description : '' }}
